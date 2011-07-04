@@ -86,6 +86,7 @@ module Deploy
         create_directory "#{config.get(:shared_path)}/config/ifconfig.d"
         create_directory "#{config.get(:shared_path)}/config/protonet.d"
         create_directory "#{config.get(:shared_path)}/externals/screenshots"
+        create_directory "#{config.get(:shared_path)}/externals/snapshots"
         create_directory "#{config.get(:shared_path)}/externals/image_proxy"
         create_directory "#{config.get(:shared_path)}/solr/data"
         create_directory "#{config.get(:shared_path)}/user-files", 0770
