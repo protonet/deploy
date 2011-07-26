@@ -47,3 +47,44 @@ This will list the methods that are available to execute from the RailsDataMappe
 This will show what will happen when the deploy method is executed in the RailsDataMapper class, but will not actually do anything
 
     dep -r production -r rails_data_mapper -m deploy -d
+
+Extending a Recipe
+
+Because you might want to use an existing recipe but just add some functality to it, here is an short example how to do it.
+
+In your app create the directories
+
+    deploy/recipes
+
+Within here create a file called for example
+
+    my_deploy.rb
+
+within the file you will need to require deploy and the recipe you want to extend.
+Then you will need to create, or override the method you want and add the method to the list of actions to be executed
+
+    require 'deploy'
+    require 'deploy/recipes/rails_data_mapper'
+
+    class MyDeploy < ::Deploy::Recipes::RailsDataMapper
+
+      def do_my_tasks
+        self.class.actions = [:my_task_one, :my_task_two]
+        self.class.run_actions(self)
+      end
+
+      desc "my_task_one", "explation of what my task does"
+      def my_task_one
+        # code...
+      end
+
+      desc "my_task_two", "explation of what my task does"
+      def my_task_two
+        # code...
+      end
+
+    end
+
+Then you should just be about to call dep as normal passing in my_deploy as the recipe (-r) and do_my_tasks as the method (-m)
+You could also just call the tasks themselves (-m my_task_one). But the do_my_tasks method shows how you can execute a batch
+of methods in one go.
