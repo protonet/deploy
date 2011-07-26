@@ -11,7 +11,7 @@ describe "Deploy" do
     summary = "This is a test summary"
 
     opts.each do |opt|
-      ::Deploy::Deploy.init(opt,summary).should.equal(1)
+      ::Deploy::Setup.init(opt,summary).should.equal(1)
     end
   end
 end

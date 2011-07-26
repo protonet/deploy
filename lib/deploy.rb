@@ -6,7 +6,7 @@ VIRTUAL_APP_ROOT = "#{File.expand_path(File.new(".").path)}"
 
 $: << "#{APP_ROOT}/lib"
 
-def config
+def dep_config
   Deploy::Config
 end
 

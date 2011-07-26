@@ -30,7 +30,7 @@ module Deploy
 
         def run_actions(run_clazz)
           actions.each do |action|
-            puts "\n*** #{action} ***" if Config.get(:verbose)
+            puts "\n*** #{action} ***" if dep_config.get(:verbose)
             run_clazz.send action
             run_clazz.push!
           end
@@ -40,17 +40,17 @@ module Deploy
 
       self.desc "revert", "Reverts a one of the previous deployments"
       def revert
-        remote "cd #{config.get(:releases_path)}"
+        remote "cd #{dep_config.get(:releases_path)}"
         remote <<EOC
           counter=1
-          FILES=#{config.get(:releases_path)}/*
+          FILES=#{dep_config.get(:releases_path)}/*
           echo "Revert to which deployment?"
           for f in $FILES; do releases[$counter]=$f; echo "${counter}. $f"; counter=$(( counter + 1 )); done
           read answer
           echo "About to revert to ${releases[$answer]}"
-          rm #{config.get(:current_path)}
-          ln -s ${releases[$answer]} #{config.get(:current_path)}
-          touch #{config.get(:current_path)}/tmp/restart.txt
+          rm #{dep_config.get(:current_path)}
+          ln -s ${releases[$answer]} #{dep_config.get(:current_path)}
+          touch #{dep_config.get(:current_path)}/tmp/restart.txt
 EOC
         push!
       end

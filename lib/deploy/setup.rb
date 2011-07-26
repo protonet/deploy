@@ -21,14 +21,14 @@ module Deploy
 
         set_parameters(options[:parameters])
 
-        config.set :env,     options[:environment]
-        config.set :dry_run, options[:dry]
-        config.set :verbose, (config.get(:dry_run) && config.get(:env) != 'test') ? true : !options[:quiet]
+        dep_config.set :env,     options[:environment]
+        dep_config.set :dry_run, options[:dry]
+        dep_config.set :verbose, (dep_config.get(:dry_run) && dep_config.get(:env) != 'test') ? true : !options[:quiet]
 
         # Set the configuration options
-        config.set :deploy_root, "/var/www"
-        config.set :app_name,    "test"
-        config.set :shell,       "/bin/bash"
+        dep_config.set :deploy_root, "/var/www"
+        dep_config.set :app_name,    "test"
+        dep_config.set :shell,       "/bin/bash"
 
         config_environment
         custom_config(config_file) if config_file
@@ -48,7 +48,7 @@ module Deploy
           begin
             # Check if we are using an alias
             # puts "THE RECIPE IS #{recipe}"
-            alias_recipe = config.get_clazz(recipe)
+            alias_recipe = dep_config.get_clazz(recipe)
             recipe = alias_recipe if alias_recipe && alias_recipe != recipe
 
             require "deploy/recipes/#{recipe}"
@@ -73,13 +73,13 @@ module Deploy
       end
 
       def map_default_recipes
-        config.set_clazz "pdm", "padrino_data_mapper"
-        config.set_clazz "rdm", "rails_data_mapper"
-        config.set_clazz "pn",  "protonet"
+        dep_config.set_clazz "pdm", "padrino_data_mapper"
+        dep_config.set_clazz "rdm", "rails_data_mapper"
+        dep_config.set_clazz "pn",  "protonet"
       end
 
       def config_environment
-        load_config("#{VIRTUAL_APP_ROOT}/deploy/environments/#{config.get(:env)}.rb")
+        load_config("#{VIRTUAL_APP_ROOT}/deploy/environments/#{dep_config.get(:env)}.rb")
       end
 
       def custom_config(file)
@@ -100,14 +100,14 @@ module Deploy
       end
 
       def set_paths!
-        config.set :app_root,      "#{config.get(:deploy_root)}/#{config.get(:app_name)}"
-        config.set :current_path,  "#{config.get(:app_root)}/current"
-        config.set :shared_path,   "#{config.get(:app_root)}/shared"
-        config.set :releases_path, "#{config.get(:app_root)}/releases"
+        dep_config.set :app_root,      "#{dep_config.get(:deploy_root)}/#{dep_config.get(:app_name)}"
+        dep_config.set :current_path,  "#{dep_config.get(:app_root)}/current"
+        dep_config.set :shared_path,   "#{dep_config.get(:app_root)}/shared"
+        dep_config.set :releases_path, "#{dep_config.get(:app_root)}/releases"
       end
 
       def set(key,value)
-        config.set(key,value)
+        dep_config.set(key,value)
       end
 
       private
@@ -117,7 +117,7 @@ module Deploy
           params = parameters.split(',')
           params.each do |p|
             key, value = p.split('=')
-            config.set(key,value)
+            dep_config.set(key,value)
           end
         end
 

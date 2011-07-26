@@ -45,68 +45,68 @@ module Deploy
 
           desc "create_directories", "create the directory structure"
           def create_directories
-            mkdir "#{Config.get(:shared_path)}/log"
-            mkdir "#{Config.get(:shared_path)}/config"
-            mkdir "#{Config.get(:shared_path)}/vendor"
-            mkdir "#{Config.get(:shared_path)}/tmp"
-            mkdir "#{Config.get(:releases_path)}"
-            remote "echo \"rvm --create use default\" > #{Config.get(:app_root)}/.rvmrc"
+            mkdir "#{dep_config.get(:shared_path)}/log"
+            mkdir "#{dep_config.get(:shared_path)}/dep_config"
+            mkdir "#{dep_config.get(:shared_path)}/vendor"
+            mkdir "#{dep_config.get(:shared_path)}/tmp"
+            mkdir "#{dep_config.get(:releases_path)}"
+            remote "echo \"rvm --create use default\" > #{dep_config.get(:app_root)}/.rvmrc"
           end
 
           desc "get_and_pack_code", "Makes sure the code is up to date and then tars it up"
           def get_and_pack_code
-            run_now! "cd #{Config.get(:local_root)}"
+            run_now! "cd #{dep_config.get(:local_root)}"
             run_now! "git pull origin master"
-            run_now! "tar --exclude='.git' --exclude='log' --exclude='tmp' --exclude='vendor/ruby' -cjf /tmp/#{Config.get(:app_name)}.tar.bz2 *"
+            run_now! "tar --exclude='.git' --exclude='log' --exclude='tmp' --exclude='vendor/ruby' -cjf /tmp/#{dep_config.get(:app_name)}.tar.bz2 *"
           end
 
           desc "push_code", "Pushes the code to the server"
           def push_code
             cmd = "rsync "
-            cmd << Config.get(:extra_rsync_options) unless !Config.get(:extra_rsync_options)
-            cmd << "/tmp/#{Config.get(:app_name)}.tar.bz2 #{Config.get(:username)}@#{Config.get(:remote)}:/tmp/"
+            cmd << dep_config.get(:extra_rsync_options) unless !dep_config.get(:extra_rsync_options)
+            cmd << "/tmp/#{dep_config.get(:app_name)}.tar.bz2 #{dep_config.get(:username)}@#{dep_config.get(:remote)}:/tmp/"
             run_now! cmd
           end
 
           def get_release_tag
-            Config.set "release_tag", Time.now.strftime('%Y%m%d%H%M%S')
+            dep_config.set "release_tag", Time.now.strftime('%Y%m%d%H%M%S')
           end
 
           desc "unpack", "Unpacks the code to the correct directories"
           def unpack
-            file_exists "/tmp/#{Config.get(:app_name)}.tar.bz2",
+            file_exists "/tmp/#{dep_config.get(:app_name)}.tar.bz2",
               [
-                "cd #{Config.get(:releases_path)}/#{Config.get("release_tag")}",
-                "tar -xjf /tmp/#{Config.get(:app_name)}.tar.bz2",
+                "cd #{dep_config.get(:releases_path)}/#{dep_config.get("release_tag")}",
+                "tar -xjf /tmp/#{dep_config.get(:app_name)}.tar.bz2",
               ]
-            remote "find #{Config.get(:current_path)} -type d -exec chmod 775 '{}' \\;"
-            remote "find #{Config.get(:current_path)} -type f -exec chmod 664 '{}' \\;"
-            remote "chown -Rf #{Config.get(:remote_user)}:#{Config.get(:remote_group)} #{Config.get(:app_root)}"
+            remote "find #{dep_config.get(:current_path)} -type d -exec chmod 775 '{}' \\;"
+            remote "find #{dep_config.get(:current_path)} -type f -exec chmod 664 '{}' \\;"
+            remote "chown -Rf #{dep_config.get(:remote_user)}:#{dep_config.get(:remote_group)} #{dep_config.get(:app_root)}"
           end
 
           desc "link", "Create the links for which the code can be placed"
           def link
-            link_exists(Config.get(:current_path), [ "rm #{Config.get(:current_path)}" ])
-            remote "mkdir #{Config.get(:releases_path)}/#{Config.get("release_tag")}"
-            remote "ln -s #{Config.get(:releases_path)}/#{Config.get("release_tag")} #{Config.get(:current_path)}"
-            remote "ln -s #{Config.get(:shared_path)}/log #{Config.get(:current_path)}/log"
-            remote "ln -s #{Config.get(:shared_path)}/vendor #{Config.get(:current_path)}/vendor"
-            remote "ln -s #{Config.get(:shared_path)}/tmp #{Config.get(:current_path)}/tmp"
+            link_exists(dep_config.get(:current_path), [ "rm #{dep_config.get(:current_path)}" ])
+            remote "mkdir #{dep_config.get(:releases_path)}/#{dep_config.get("release_tag")}"
+            remote "ln -s #{dep_config.get(:releases_path)}/#{dep_config.get("release_tag")} #{dep_config.get(:current_path)}"
+            remote "ln -s #{dep_config.get(:shared_path)}/log #{dep_config.get(:current_path)}/log"
+            remote "ln -s #{dep_config.get(:shared_path)}/vendor #{dep_config.get(:current_path)}/vendor"
+            remote "ln -s #{dep_config.get(:shared_path)}/tmp #{dep_config.get(:current_path)}/tmp"
           end
 
           desc "bundle", "Runs bundle to make sure all the required gems are on the ststem"
           def bundle
-            remote "rvm rvmrc trust #{Config.get(:app_root)}"
-            remote "cd #{Config.get(:current_path)}"
+            remote "rvm rvmrc trust #{dep_config.get(:app_root)}"
+            remote "cd #{dep_config.get(:current_path)}"
             remote "bundle install --without test development --deployment"
-            remote "find #{Config.get(:shared_path)}/vendor -type d -name \"bin\" -exec chmod -Rf 775 '{}' \\;"
+            remote "find #{dep_config.get(:shared_path)}/vendor -type d -name \"bin\" -exec chmod -Rf 775 '{}' \\;"
           end
 
           desc "clean_up", "Deletes any old releases if there are more than the max configured releases"
           def clean_up
-            remote "cd #{Config.get(:releases_path)}"
+            remote "cd #{dep_config.get(:releases_path)}"
             remote "export NUM_RELEASES=`ls -trl -m1 | wc -l`"
-            remote "export NUM_TO_REMOVE=$(( $NUM_RELEASES - #{Config.get(:max_num_releases)} ))"
+            remote "export NUM_TO_REMOVE=$(( $NUM_RELEASES - #{dep_config.get(:max_num_releases)} ))"
             remote "export COUNTER=1"
             on_good_exit "[[ $NUM_TO_REMOVE =~ ^[0-9]+$ ]] && [[ $COUNTER =~ ^[0-9]+$ ]] && [[ $NUM_TO_REMOVE -ge 1 ]]",
               [
@@ -116,7 +116,7 @@ module Deploy
 
           desc "restart", "Causes the server to restart for this app"
           def restart
-            remote "touch #{Config.get(:current_path)}/tmp/restart.txt"
+            remote "touch #{dep_config.get(:current_path)}/tmp/restart.txt"
           end
         end
       end

@@ -1,4 +1,5 @@
 require "deploy"
+require 'bacon'
 
 puts APP_ROOT
 puts VIRTUAL_APP_ROOT
