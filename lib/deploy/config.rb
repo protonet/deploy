@@ -12,19 +12,19 @@ module Deploy
       end
 
       def set(key, value)
-        self.config[:default][key] = value
+        self.config[:default][key.to_sym] = value
       end
 
       def get(key)
-        self.config[:default][key]
+        self.config[:default][key.to_sym]
       end
 
       def set_clazz(key, value)
-        self.config[:clazz][key] = value
+        self.config[:clazz][key.to_sym] = value
       end
 
       def get_clazz(key)
-        self.config[:clazz][key]
+        self.config[:clazz][key.to_sym]
       end
 
     end
