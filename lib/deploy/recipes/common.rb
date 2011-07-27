@@ -50,7 +50,7 @@ module Deploy
             mkdir "#{dep_config.get(:shared_path)}/vendor"
             mkdir "#{dep_config.get(:shared_path)}/tmp"
             mkdir "#{dep_config.get(:releases_path)}"
-            remote "echo \"rvm --create use default\" > #{dep_config.get(:app_root)}/.rvmrc"
+            remote "echo \"rvm --create use #{dep_config.get(:ruby_version) || 'default'}@#{dep_config.get(:app_name)}\" > #{dep_config.get(:app_root)}/.rvmrc"
           end
 
           desc "get_and_pack_code", "Makes sure the code is up to date and then tars it up"
