@@ -81,8 +81,9 @@ module Deploy
         excluded_files = ['base.rb', 'common.rb']
 
         Dir["#{APP_ROOT}/lib/deploy/recipes/*.rb"].each do |file_name|
-          unless excluded_files.include?(file_name)
-            puts file_name.split('/').last.split('.').first
+          chopped_file = file_name.split('/').last
+          unless excluded_files.include?(chopped_file)
+            puts chopped_file.split('.').first
           end
         end
 
