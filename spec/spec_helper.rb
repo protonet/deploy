@@ -13,7 +13,8 @@ class Bacon::Context
     {
       :padrino_data_mapper => [
         :setup, :deploy_create,
-        :deploy, :get_and_pack_code,
+        :deploy_push, :deploy_pull,
+        :get_and_pack_code,
         :push_code, :get_release_tag,
         :link, :unpack,
         :bundle, :setup_db,
@@ -23,7 +24,8 @@ class Bacon::Context
       #:pronet =>
       :rails_data_mapper => [
         :setup, :deploy_create,
-        :deploy, :get_and_pack_code,
+        :deploy_push, :deploy_pull,
+        :get_and_pack_code,
         :push_code, :get_release_tag,
         :link, :unpack,
         :bundle, :setup_db,

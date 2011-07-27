@@ -48,7 +48,7 @@ module Deploy
             self.class.actions = [
               :get_release_tag,
               :link,
-              :pull_code
+              :pull_code,
               :unpack,
               :bundle,
               :auto_upgrade,
@@ -93,7 +93,7 @@ module Deploy
             release_slot = "#{dep_config.get(:releases_path)}/#{dep_config.get(:release_tag)}"
 
             remote "cd #{tmp_path}"
-            file_not_exists "#{repo}", [ "git clone #{server_repo} #{app_name}" ]
+            file_not_exists "#{local_repo}", [ "git clone #{server_repo} #{app_name}" ]
             remote "cd #{local_repo}"
             remote "git pull"
             file_exists "#{local_repo}.zip", [ "rm #{local_repo}.zip" ]
