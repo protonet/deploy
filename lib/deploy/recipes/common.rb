@@ -49,7 +49,6 @@ module Deploy
               :get_release_tag,
               :link,
               :pull_code,
-              :unpack,
               :bundle,
               :auto_upgrade,
               :clean_up,
