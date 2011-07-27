@@ -99,7 +99,7 @@ module Deploy
             file_exists "#{local_repo}.zip", [ "rm #{local_repo}.zip" ]
             remote "git archive -o #{local_repo}.zip HEAD"
             remote "cd #{release_slot}"
-            remote "unzip #{local_repo}.zip -x log/* tmp/* vender/ruby/*"
+            remote "unzip #{local_repo}.zip -x log/* tmp/* vender/ruby/* .rvmrc"
           end
 
           def get_release_tag
