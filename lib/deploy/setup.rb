@@ -79,17 +79,20 @@ module Deploy
 
       def recipe_list
         excluded_files = ['base.rb', 'common.rb']
+        sorted_files = []
 
         Dir["#{APP_ROOT}/lib/deploy/recipes/*.rb"].each do |file_name|
           chopped_file = file_name.split('/').last
           unless excluded_files.include?(chopped_file)
-            puts chopped_file.split('.').first
+            sorted_files << chopped_file.split('.').first
           end
         end
 
         Dir["#{VIRTUAL_APP_ROOT}/deploy/recipes/*.rb"].each do |file_name|
-          puts file_name.split('/').last.split('.').first
+          sorted_files << file_name.split('/').last.split('.').first
         end
+
+        sorted_files.sort.each {|sorted_file| puts sorted_file}
 
         return 0
       end
