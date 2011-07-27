@@ -155,10 +155,7 @@ module Deploy
 
           desc "clear_tmp", "clears the tmp dir in the deploy root"
           def clear_tmp
-            file_exists dep_config.get(:deploy_tmp_path), [
-              "rm -rf #{dep_config.get(:deploy_tmp_path)}/*",
-              "rm -rf #{dep_config.get(:deploy_tmp_path)}/.*",
-            ]
+            file_exists dep_config.get(:deploy_tmp_path), [ "rm -rf #{dep_config.get(:deploy_tmp_path)}/*" ]
             push!
           end
 
