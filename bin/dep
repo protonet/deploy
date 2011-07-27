@@ -23,6 +23,7 @@ else
     opts.on("-q", "--quiet", "Less noise")                              { |q| options[:quiet]       = q }
     opts.on("-M", "--methods", "Show methods")                          { |m| options[:methods]     = m }
     opts.on("-R", "--revert", "revert the deployment")                  { |r| options[:revert]      = r }
+    opts.on("-l", "--list", "List all recipes")                         { |l| options[:list]        = l }
     opts.on("-p", "--parameters", "comma separated list of parameters") { |p| options[:parameters]  = p }
   end
   op.parse!

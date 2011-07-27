@@ -13,6 +13,9 @@ module Deploy
         end
 
         # Assaign the parsed options to local variables
+        list_recipes   = options[:list]
+        return recipe_list if list_recipes
+
         show_methods   = options[:methods]
         recipe         = options[:recipe]
         should_revert  = options[:revert]
@@ -59,16 +62,32 @@ module Deploy
           end
         end
 
-        if show_methods
-          if recipe_clazz
-            recipe_clazz.all_descriptions.each do |description|
-              puts "#{spacing(description.first, 40)}#{description.last}"
-            end
-          end
-          return 0
-        end
+        return methods_list(recipe_clazz) if show_methods
 
         recipe_clazz.new.send(method.to_sym) if recipe_clazz
+        return 0
+      end
+
+      def methods_list(recipe_clazz)
+        if recipe_clazz
+          recipe_clazz.all_descriptions.each do |description|
+            puts "#{spacing(description.first, 40)}#{description.last}"
+          end
+        end
+        return 0
+      end
+
+      def recipe_list
+        excluded_files = ['base.rb', 'common.rb']
+
+        Dir["#{APP_ROOT}/lib/deploy/recipes/*.rb"].each do |file_name|
+          puts file_name.split('.').first unless excluded_files.include?(file_name)
+        end
+
+        Dir["#{VIRTUAL_APP_ROOT}/deploy/recipes/*.rb"].each do |file_name|
+          puts file_name.split('.').first
+        end
+
         return 0
       end
 
