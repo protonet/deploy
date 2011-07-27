@@ -87,11 +87,12 @@ module Deploy
           desc "pull_code", "Pulls the code from the git repo"
           def pull_code
             tmp_path     = dep_config.get(:deploy_tmp_path)
-            local_repo   = "#{dep_config.get(:deploy_tmp_path)}/#{dep_config.get(:app_name)}"
-            server_repo  = dep_config.get(:git_repo)
             app_name     = dep_config.get(:app_name)
+            local_repo   = "#{dep_config.get(:deploy_tmp_path)}/#{app_name}"
+            server_repo  = dep_config.get(:git_repo)
             release_slot = "#{dep_config.get(:releases_path)}/#{dep_config.get(:release_tag)}"
 
+            file_not_exists "#{tmp_path}", [ "mkdir -p #{tmp_path}" ]
             remote "cd #{tmp_path}"
             file_not_exists "#{local_repo}", [ "git clone #{server_repo} #{app_name}" ]
             remote "cd #{local_repo}"

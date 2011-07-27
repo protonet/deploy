@@ -5,8 +5,9 @@ puts APP_ROOT
 puts VIRTUAL_APP_ROOT
 
 class Bacon::Context
+
   def not_real_recipes
-    ["common.rb", "base.rb"]
+    @not_real_recipes ||= ["common.rb", "base.rb"]
   end
 
   def recipes
@@ -21,7 +22,6 @@ class Bacon::Context
         :auto_migrate, :auto_upgrade,
         :clean_up, :restart,
       ],
-      #:pronet =>
       :rails_data_mapper => [
         :setup, :deploy_create,
         :deploy_push, :deploy_pull,
@@ -35,12 +35,7 @@ class Bacon::Context
     }
   end
 
-
 end
-
-  def config
-    Deploy::Config
-  end
 
 # Bacon.extend(Bacon.const_get("KnockOutput"))
 Bacon.extend(Bacon.const_get("TestUnitOutput"))
