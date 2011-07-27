@@ -153,6 +153,14 @@ module Deploy
             remote "touch #{dep_config.get(:current_path)}/tmp/restart.txt"
           end
 
+          desc "clear_tmp", "clears the tmp dir in the deploy root"
+          def clear_tmp
+            file_exists dep_config.get(:deploy_tmp_path), [
+              "rm -rf #{dep_config.get(:deploy_tmp_path)}/*",
+              "rm -rf #{dep_config.get(:deploy_tmp_path)}/.*",
+            ]
+          end
+
           self.desc "revert", "Reverts a one of the previous deployments"
           def revert
             remote "cd #{dep_config.get(:releases_path)}"
