@@ -28,7 +28,7 @@ module Deploy
           end
 
           desc "deploy", "Deploy the app to the server"
-          def deploy
+          def deploy_push
             self.class.actions = [
               :get_and_pack_code,
               :push_code,
@@ -43,8 +43,24 @@ module Deploy
             self.class.run_actions(self)
           end
 
+          desc "deploy", "Deploy the app to the server"
+          def deploy_pull
+            self.class.actions = [
+              :get_release_tag,
+              :link,
+              :pull_code
+              :unpack,
+              :bundle,
+              :auto_upgrade,
+              :clean_up,
+              :restart
+            ]
+            self.class.run_actions(self)
+          end
+
           desc "create_directories", "create the directory structure"
           def create_directories
+            mkdir "#{dep_config.get(:app_root)}/tmp"
             mkdir "#{dep_config.get(:shared_path)}/log"
             mkdir "#{dep_config.get(:shared_path)}/dep_config"
             mkdir "#{dep_config.get(:shared_path)}/vendor"
@@ -66,6 +82,24 @@ module Deploy
             cmd << dep_config.get(:extra_rsync_options) unless !dep_config.get(:extra_rsync_options)
             cmd << "/tmp/#{dep_config.get(:app_name)}.tar.bz2 #{dep_config.get(:username)}@#{dep_config.get(:remote)}:/tmp/"
             run_now! cmd
+          end
+
+          desc "pull_code", "Pulls the code from the git repo"
+          def pull_code
+            tmp_path     = dep_config.get(:deploy_tmp_path)
+            local_repo   = "#{dep_config.get(:deploy_tmp_path)}/#{dep_config.get(:app_name)}"
+            server_repo  = dep_config.get(:git_repo)
+            app_name     = dep_config.get(:app_name)
+            release_slot = "#{dep_config.get(:releases_path)}/#{dep_config.get(:release_tag)}"
+
+            remote "cd #{tmp_path}"
+            file_not_exists "#{repo}", [ "git clone #{server_repo} #{app_name}" ]
+            remote "cd #{local_repo}"
+            remote "git pull"
+            file_exists "#{local_repo}.zip", [ "rm #{local_repo}.zip" ]
+            remote "git archive -o #{local_repo}.zip HEAD"
+            remote "cd #{release_slot}"
+            remote "unzip #{local_repo}.zip -x log/* tmp/* vender/ruby/*"
           end
 
           def get_release_tag
@@ -141,3 +175,4 @@ EOC
     end
   end
 end
+

@@ -125,10 +125,11 @@ module Deploy
       end
 
       def set_paths!
-        dep_config.set :app_root,      "#{dep_config.get(:deploy_root)}/#{dep_config.get(:app_name)}"
-        dep_config.set :current_path,  "#{dep_config.get(:app_root)}/current"
-        dep_config.set :shared_path,   "#{dep_config.get(:app_root)}/shared"
-        dep_config.set :releases_path, "#{dep_config.get(:app_root)}/releases"
+        dep_config.set :app_root,        "#{dep_config.get(:deploy_root)}/#{dep_config.get(:app_name)}"
+        dep_config.set :deploy_tmp_path, "#{dep_config.get(:app_root)}/tmp"
+        dep_config.set :current_path,    "#{dep_config.get(:app_root)}/current"
+        dep_config.set :shared_path,     "#{dep_config.get(:app_root)}/shared"
+        dep_config.set :releases_path,   "#{dep_config.get(:app_root)}/releases"
       end
 
       def set(key,value)
