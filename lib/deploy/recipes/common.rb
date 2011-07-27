@@ -159,6 +159,7 @@ module Deploy
               "rm -rf #{dep_config.get(:deploy_tmp_path)}/*",
               "rm -rf #{dep_config.get(:deploy_tmp_path)}/.*",
             ]
+            push!
           end
 
           self.desc "revert", "Reverts a one of the previous deployments"
