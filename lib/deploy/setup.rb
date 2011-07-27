@@ -148,7 +148,8 @@ module Deploy
           }
 
           return r_params[:methods] if options[:methods]
-          return r_params[:revert] if options[:revert]
+          return r_params[:revert]  if options[:revert]
+          return []                 if options[:list]
           r_params[:default]
         end
 
