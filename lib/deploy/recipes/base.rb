@@ -31,8 +31,8 @@ module Deploy
         def run_actions(run_clazz)
           actions.each do |action|
             puts "\n*** #{action} ***" if dep_config.get(:verbose)
-            run_clazz.send action
-            run_clazz.push!
+            should_run_now = run_clazz.send action
+            run_clazz.push! should_run_now
           end
         end
 

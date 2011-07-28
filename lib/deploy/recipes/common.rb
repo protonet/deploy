@@ -8,6 +8,7 @@ module Deploy
           def setup
             self.class.actions = [:create_directories]
             self.class.run_actions(self)
+            big_push!
           end
 
           desc "deploy_create", "Deploy the app to the server, and completely wipe the database tables and recreate them"
@@ -25,6 +26,7 @@ module Deploy
               :restart
             ]
             self.class.run_actions(self)
+            big_push!
           end
 
           desc "deploy", "Deploy the app to the server"
@@ -41,6 +43,7 @@ module Deploy
               :restart
             ]
             self.class.run_actions(self)
+            big_push!
           end
 
           desc "deploy", "Deploy the app to the server"
@@ -55,6 +58,7 @@ module Deploy
               :restart
             ]
             self.class.run_actions(self)
+            big_push!
           end
 
           desc "create_directories", "create the directory structure"
@@ -156,7 +160,7 @@ module Deploy
           desc "clear_tmp", "clears the tmp dir in the deploy root"
           def clear_tmp
             file_exists dep_config.get(:deploy_tmp_path), [ "rm -rf #{dep_config.get(:deploy_tmp_path)}/*" ]
-            push!
+            push! true
           end
 
           self.desc "revert", "Reverts a one of the previous deployments"

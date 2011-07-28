@@ -1,6 +1,11 @@
 module Deploy
   module Base
     attr_accessor :commands
+    attr_accessor :big_cache
+
+    def big_cache
+      @big_cache ||= {:local => [], :remote => []}
+    end
 
     def commands
       @commands ||= []
@@ -46,11 +51,11 @@ module Deploy
         end
 
         unless local_commands.empty?
-          run_now! local_commands.join("; ")
+          push_now == true ? run_now!(local_commands.join("; ")) : self.big_cache[:local] << local_commands.join("; ")
         end
 
         unless remote_commands.empty?
-         run_now! ssh_cmd(remote_commands.join("; "))
+          push_now == true ? run_now!(ssh_cmd(remote_commands.join("; "))) : self.big_cache[:remote] << remote_commands.join("; ")
         end
 
         puts "\n" if dep_config.get(:env) != 'test'
@@ -59,7 +64,18 @@ module Deploy
     end
 
     def big_push!
-      # TODO: The future of pushing stuff to the server
+
+      unless self.big_cache[:local].empty?
+        puts "BIG PUSH OF LOCAL COMMANDS"  if dep_config.get(:verbose)
+        run_now! self.big_cache[:local].join('; ')
+      end
+
+      unless self.big_cache[:remote].empty?
+        puts "BIG PUSH OF REMOTE COMMANDS"  if dep_config.get(:verbose)
+        run_now! ssh_cmd(self.big_cache[:remote].join('; '))
+      end
+
+      self.big_cache = {:local => [], :remote => []}
     end
   end
 end
