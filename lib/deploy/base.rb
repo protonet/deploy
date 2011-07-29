@@ -36,7 +36,7 @@ module Deploy
 
     def push!(push_now = false)
       unless self.commands.empty?
-        local_commands = []
+        local_commands  = []
         remote_commands = []
 
         #TODO: Need tests to make sure local and remote work the way they are supposed to
@@ -50,8 +50,8 @@ module Deploy
           end
         end
 
-        run_now!(local_commands.join("; "))           unless local_commands.empty?
-        run_now!(ssh_cmd(remote_commands.join("; "))) unless remote_commands.empty?
+        dep_config.set(:local_status,  run_now!(local_commands.join("; ")))           unless local_commands.empty?
+        dep_config.set(:remote_status, run_now!(ssh_cmd(remote_commands.join("; ")))) unless remote_commands.empty?
 
         puts "\n" if should_i_do_it?
         self.commands = []

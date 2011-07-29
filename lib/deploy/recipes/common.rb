@@ -183,7 +183,7 @@ module Deploy
           desc "clear_tmp", "clears the tmp dir in the deploy root"
           def clear_tmp
             file_exists dep_config.get(:deploy_tmp_path), [ "rm -rf #{dep_config.get(:deploy_tmp_path)}/*" ]
-            push! true
+            push!
           end
 
           self.desc "revert", "Reverts a one of the previous deployments"
@@ -200,7 +200,7 @@ module Deploy
               ln -s ${releases[$answer]} #{dep_config.get(:current_path)}
               touch #{dep_config.get(:current_path)}/tmp/restart.txt
 EOC
-            push! true
+            push!
           end
 
           def set_prev_release_tag
@@ -209,7 +209,7 @@ EOC
             dep_config.set(:prev_release_tag, return_value.split.reject{|v|v !~ /^\d+$/}.first.strip) if should_i_do_it?
           end
 
-          def on_failure
+          def on_remote_failure
             remote "cd #{dep_config.get(:app_root)}"
             if dep_config.get(:prev_release_tag)
               on_good_exit "ls -l | grep #{dep_config.get(:release_tag)} 2>&1 > /dev/null",[
@@ -219,6 +219,11 @@ EOC
               bundle
               remote "exit 1"
             end
+          end
+
+          def on_local_failure
+            # Nothing to do here yet
+            remote "exit 1"
           end
 
         end

@@ -32,7 +32,9 @@ module Deploy
           actions.each do |action|
             puts "\n*** #{action} ***" if should_i_do_it?
             run_clazz.send(action)
-            run_clazz.push!
+            status = run_clazz.push!
+            run_clazz.send(:on_local_failure)  if dep_config.get(:local_status)  == false
+            run_clazz.send(:on_remote_failure) if dep_config.get(:remote_status) == false
           end
         end
 
