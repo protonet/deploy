@@ -12,13 +12,33 @@ module Deploy
           end
 
           desc "deploy_create", "Deploy the app to the server, and completely wipe the database tables and recreate them"
-          def deploy_create
+          def deploy_push_create
             self.class.actions = [
+              :set_prev_release_tag,
+              :set_release_tag,
               :get_and_pack_code,
               :push_code,
-              :get_release_tag,
-              :link,
+              :create_release_dir,
               :unpack,
+              :link,
+              :bundle,
+              :setup_db,
+              :auto_migrate,
+              :clean_up,
+              :restart
+            ]
+            self.class.run_actions(self)
+            big_push!
+          end
+
+          desc "deploy_create", "Deploy the app to the server, and completely wipe the database tables and recreate them"
+          def deploy_pull_create
+            self.class.actions = [
+              :set_prev_release_tag,
+              :set_release_tag,
+              :create_release_dir,
+              :pull_code,
+              :link,
               :bundle,
               :setup_db,
               :auto_migrate,
@@ -32,11 +52,13 @@ module Deploy
           desc "deploy", "Deploy the app to the server"
           def deploy_push
             self.class.actions = [
+              :set_prev_release_tag,
               :get_and_pack_code,
               :push_code,
-              :get_release_tag,
-              :link,
+              :set_release_tag,
+              :create_release_dir,
               :unpack,
+              :link,
               :bundle,
               :auto_upgrade,
               :clean_up,
@@ -49,9 +71,11 @@ module Deploy
           desc "deploy", "Deploy the app to the server"
           def deploy_pull
             self.class.actions = [
-              :get_release_tag,
-              :link,
+              :set_prev_release_tag,
+              :set_release_tag,
+              :create_release_dir,
               :pull_code,
+              :link,
               :bundle,
               :auto_upgrade,
               :clean_up,
@@ -106,7 +130,7 @@ module Deploy
             remote "unzip -o #{local_repo}.zip -x log/* tmp/* vender/ruby/* .rvmrc"
           end
 
-          def get_release_tag
+          def set_release_tag
             dep_config.set "release_tag", Time.now.strftime('%Y%m%d%H%M%S')
           end
 
@@ -122,10 +146,14 @@ module Deploy
             remote "chown -Rf #{dep_config.get(:remote_user)}:#{dep_config.get(:remote_group)} #{dep_config.get(:app_root)}"
           end
 
+          desc "create_release_dir", "creates the release directory"
+          def create_release_dir
+            remote "mkdir #{dep_config.get(:releases_path)}/#{dep_config.get("release_tag")}"
+          end
+
           desc "link", "Create the links for which the code can be placed"
           def link
             link_exists(dep_config.get(:current_path), [ "rm #{dep_config.get(:current_path)}" ])
-            remote "mkdir #{dep_config.get(:releases_path)}/#{dep_config.get("release_tag")}"
             remote "ln -s #{dep_config.get(:releases_path)}/#{dep_config.get("release_tag")} #{dep_config.get(:current_path)}"
             remote "ln -s #{dep_config.get(:shared_path)}/log #{dep_config.get(:current_path)}/log"
             remote "ln -s #{dep_config.get(:shared_path)}/vendor #{dep_config.get(:current_path)}/vendor"
@@ -177,8 +205,27 @@ module Deploy
               ln -s ${releases[$answer]} #{dep_config.get(:current_path)}
               touch #{dep_config.get(:current_path)}/tmp/restart.txt
 EOC
-            push!
+            push! true
           end
+
+          def set_prev_release_tag
+            cmd = "cd #{dep_config.get(:releases_path)} && ls -tl -m1"
+            return_value = run_now_with_return! ssh_cmd(cmd)
+            dep_config.set(:prev_release_tag, return_value.split.reject{|v|v !~ /^\d+$/}.first.strip)
+          end
+
+          def on_failure
+            remote "cd #{dep_config.get(:app_root)}"
+            if dep_config.get(:prev_release_tag)
+              on_good_exit "ls -l | grep #{dep_config.get(:release_tag)} 2>&1 > /dev/null",[
+                "rm #{dep_config.get(:current_path)}",
+                "ln -s #{dep_config.get(:releases_path)}/#{dep_config.get(:prev_release_tag)} #{dep_config.get(:current_path)}",
+              ]
+              bundle
+              remote "exit 1"
+            end
+          end
+
         end
       end
 

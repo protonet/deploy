@@ -34,6 +34,11 @@ module Deploy
       system command unless dep_config.get(:dry_run)
     end
 
+    def run_now_with_return!(command)
+      puts "EXECUTING: #{command}" if dep_config.get(:verbose)
+      `#{command}` unless dep_config.get(:dry_run)
+    end
+
     def push!(push_now = false)
       unless self.commands.empty?
         local_commands = []
