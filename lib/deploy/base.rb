@@ -25,12 +25,12 @@ module Deploy
     end
 
     def run_now!(command)
-      puts "EXECUTING: #{command}" if dep_config.get(:verbose)
+      puts "EXECUTING: #{command}" if verbose?
       system command if should_i_do_it?
     end
 
     def run_now_with_return!(command)
-      puts "EXECUTING: #{command}" if dep_config.get(:verbose)
+      puts "EXECUTING: #{command}" if verbose?
       `#{command}` if should_i_do_it?
     end
 
@@ -42,10 +42,10 @@ module Deploy
         #TODO: Need tests to make sure local and remote work the way they are supposed to
         self.commands.each do |command|
           if command.first == :local
-            puts "LOCAL: #{command.last}" if dep_config.get(:verbose)
+            puts "LOCAL: #{command.last}" if verbose?
             local_commands << command.last
           elsif command.first == :remote
-            puts "REMOTE: #{command.last}" if dep_config.get(:verbose)
+            puts "REMOTE: #{command.last}" if verbose?
             remote_commands << command.last
           end
         end

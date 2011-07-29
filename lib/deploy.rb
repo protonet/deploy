@@ -14,6 +14,10 @@ def should_i_do_it?
   dep_config.get(:env) != 'test' && !dep_config.get(:dry_run)
 end
 
+def verbose?
+  dep_config.get(:verbose)
+end
+
 require 'rubygems'
 #require 'bundler/setup'
 

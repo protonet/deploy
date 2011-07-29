@@ -30,7 +30,7 @@ module Deploy
 
         def run_actions(run_clazz)
           actions.each do |action|
-            puts "\n*** #{action} ***" if should_i_do_it?
+            puts "\n*** #{action} ***" if verbose?
             run_clazz.send(action)
             status = run_clazz.push!
             run_clazz.send(:on_local_failure)  if should_i_do_it? && dep_config.get(:local_status)  == false
