@@ -217,13 +217,15 @@ EOC
                 "ln -s #{dep_config.get(:releases_path)}/#{dep_config.get(:prev_release_tag)} #{dep_config.get(:current_path)}",
               ]
               bundle
-              remote "exit 1"
+              #remote "exit 1"
+              push!
+              exit(1)
             end
           end
 
           def on_local_failure
             # Nothing to do here yet
-            remote "exit 1"
+            exit(1)
           end
 
         end
