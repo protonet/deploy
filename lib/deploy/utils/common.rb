@@ -1,5 +1,5 @@
 module Deploy
-  module Recipes
+  module Utils
     module Common
 
       def self.included(base)

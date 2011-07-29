@@ -1,8 +1,8 @@
 module Deploy
   module Recipes
-    class RailsDataMapper < ::Deploy::Recipes::Base
+    class RailsDataMapper < ::Deploy::Utils::Base
 
-      include ::Deploy::Recipes::Common
+      include ::Deploy::Utils::Common
 
       desc "setup_db", "Creates the database"
       def setup_db

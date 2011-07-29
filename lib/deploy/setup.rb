@@ -55,7 +55,7 @@ module Deploy
             recipe = alias_recipe if alias_recipe && alias_recipe != recipe
 
             require "deploy/recipes/#{recipe}"
-            recipe_clazz = eval("::Deploy::Recipes::#{::Deploy::Util.camelize(recipe)}")
+            recipe_clazz = eval("::Deploy::Recipes::#{::Deploy::Utils::String.camelize(recipe)}")
           rescue Exception => e
             puts "Error: #{e}"
             # The recipe that was specified does not exist in the default recipes

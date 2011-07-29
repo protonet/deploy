@@ -3,7 +3,7 @@ require 'erb'
 
 module Deploy
   module Recipes
-    class Protonet < ::Deploy::Recipes::Base
+    class Protonet < ::Deploy::Utils::Base
 
       def create_directory(dir_name, permissions = nil)
         FileUtils.mkdir_p dir_name

@@ -24,11 +24,10 @@ require 'rubygems'
 require 'optparse'
 
 require 'deploy/config'
-require 'deploy/extensions'
 require 'deploy/setup'
-require 'deploy/base'
-require 'deploy/remote_commands'
 
-require 'deploy/recipes/base'
-require 'deploy/recipes/common'
+require 'deploy/utils/string'
+require 'deploy/utils/remote_commands'
+require 'deploy/utils/base'
+require 'deploy/utils/common'
 
