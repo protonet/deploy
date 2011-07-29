@@ -1,11 +1,6 @@
 module Deploy
   module Base
     attr_accessor :commands
-    attr_accessor :big_cache
-
-    def big_cache
-      @big_cache ||= {:local => [], :remote => []}
-    end
 
     def commands
       @commands ||= []
@@ -31,12 +26,12 @@ module Deploy
 
     def run_now!(command)
       puts "EXECUTING: #{command}" if dep_config.get(:verbose)
-      system command unless dep_config.get(:dry_run)
+      system command if should_i_do_it?
     end
 
     def run_now_with_return!(command)
       puts "EXECUTING: #{command}" if dep_config.get(:verbose)
-      `#{command}` unless dep_config.get(:dry_run)
+      `#{command}` if should_i_do_it?
     end
 
     def push!(push_now = false)
@@ -55,33 +50,14 @@ module Deploy
           end
         end
 
-        unless local_commands.empty?
-          push_now == true ? run_now!(local_commands.join("; ")) : self.big_cache[:local] << local_commands.join("; ")
-        end
+        run_now!(local_commands.join("; "))           unless local_commands.empty?
+        run_now!(ssh_cmd(remote_commands.join("; "))) unless remote_commands.empty?
 
-        unless remote_commands.empty?
-          push_now == true ? run_now!(ssh_cmd(remote_commands.join("; "))) : self.big_cache[:remote] << remote_commands.join("; ")
-        end
-
-        puts "\n" if dep_config.get(:env) != 'test'
+        puts "\n" if should_i_do_it?
         self.commands = []
       end
     end
 
-    def big_push!
-
-      unless self.big_cache[:local].empty?
-        puts "BIG PUSH OF LOCAL COMMANDS"  if dep_config.get(:verbose)
-        run_now! self.big_cache[:local].join('; ')
-      end
-
-      unless self.big_cache[:remote].empty?
-        puts "BIG PUSH OF REMOTE COMMANDS"  if dep_config.get(:verbose)
-        run_now! ssh_cmd(self.big_cache[:remote].join('; '))
-      end
-
-      self.big_cache = {:local => [], :remote => []}
-    end
   end
 end
 

@@ -7,7 +7,7 @@ module Deploy
         # Check whether we have the minimum set of options
         required_params(options).each do |param|
           unless options.keys.include?(param)
-            puts summary
+            puts summary if should_i_do_it?
             return 1
           end
         end

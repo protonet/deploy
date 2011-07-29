@@ -8,11 +8,10 @@ module Deploy
           def setup
             self.class.actions = [:create_directories]
             self.class.run_actions(self)
-            big_push!
           end
 
           desc "deploy_create", "Deploy the app to the server, and completely wipe the database tables and recreate them"
-          def deploy_push_create
+          def push_create
             self.class.actions = [
               :set_prev_release_tag,
               :set_release_tag,
@@ -28,11 +27,10 @@ module Deploy
               :restart
             ]
             self.class.run_actions(self)
-            big_push!
           end
 
           desc "deploy_create", "Deploy the app to the server, and completely wipe the database tables and recreate them"
-          def deploy_pull_create
+          def pull_create
             self.class.actions = [
               :set_prev_release_tag,
               :set_release_tag,
@@ -46,11 +44,10 @@ module Deploy
               :restart
             ]
             self.class.run_actions(self)
-            big_push!
           end
 
           desc "deploy", "Deploy the app to the server"
-          def deploy_push
+          def push_update
             self.class.actions = [
               :set_prev_release_tag,
               :get_and_pack_code,
@@ -65,11 +62,10 @@ module Deploy
               :restart
             ]
             self.class.run_actions(self)
-            big_push!
           end
 
           desc "deploy", "Deploy the app to the server"
-          def deploy_pull
+          def pull_update
             self.class.actions = [
               :set_prev_release_tag,
               :set_release_tag,
@@ -82,7 +78,6 @@ module Deploy
               :restart
             ]
             self.class.run_actions(self)
-            big_push!
           end
 
           desc "create_directories", "create the directory structure"
@@ -211,7 +206,7 @@ EOC
           def set_prev_release_tag
             cmd = "cd #{dep_config.get(:releases_path)} && ls -tl -m1"
             return_value = run_now_with_return! ssh_cmd(cmd)
-            dep_config.set(:prev_release_tag, return_value.split.reject{|v|v !~ /^\d+$/}.first.strip)
+            dep_config.set(:prev_release_tag, return_value.split.reject{|v|v !~ /^\d+$/}.first.strip) if should_i_do_it?
           end
 
           def on_failure

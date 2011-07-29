@@ -10,6 +10,10 @@ def dep_config
   Deploy::Config
 end
 
+def should_i_do_it?
+  dep_config.get(:env) != 'test' && !dep_config.get(:dry_run)
+end
+
 require 'rubygems'
 #require 'bundler/setup'
 
@@ -23,3 +27,4 @@ require 'deploy/remote_commands'
 
 require 'deploy/recipes/base'
 require 'deploy/recipes/common'
+
