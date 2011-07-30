@@ -13,12 +13,16 @@ module Deploy
 
       class << self
 
-        def desc(method_name, description)
+        def desc(method_name, description, &block)
           @@descriptions << [method_name, description]
+
+          send :define_method, method_name.to_sym do
+            self.instance_eval(&block)
+          end
         end
 
         def all_descriptions
-          descriptions.sort{|a,b| a.first <=> b.first}
+          @@descriptions.sort{|a,b| a.first <=> b.first}
         end
 
         def prepend(action, prepend_before = nil)
@@ -66,7 +70,7 @@ module Deploy
         if actions.is_a?(Array)
           @@actions = @@actions + actions
         else
-          @@actions << action
+          @@actions << actions
         end
       end
 

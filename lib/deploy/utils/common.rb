@@ -4,14 +4,12 @@ module Deploy
 
       def self.included(base)
         base.class_eval do
-          desc "setup", "create the directory structure needed for a deployment"
-          def setup
+          desc "setup", "create the directory structure needed for a deployment" do
             queue [:create_directories]
             process_queue
           end
 
-          desc "deploy_create", "Deploy the app to the server, and completely wipe the database tables and recreate them"
-          def push_create
+          desc "push_create", "Deploy the app to the server, and completely wipe the database tables and recreate them" do
             queue [
               :set_prev_release_tag,
               :set_release_tag,
@@ -29,8 +27,7 @@ module Deploy
             process_queue
           end
 
-          desc "deploy_create", "Deploy the app to the server, and completely wipe the database tables and recreate them"
-          def pull_create
+          desc "pull_create", "Deploy the app to the server, and completely wipe the database tables and recreate them" do
             queue [
               :set_prev_release_tag,
               :set_release_tag,
@@ -46,8 +43,7 @@ module Deploy
             process_queue
           end
 
-          desc "deploy", "Deploy the app to the server"
-          def push_update
+          desc "push_update", "Deploy the app to the server" do
             queue [
               :set_prev_release_tag,
               :get_and_pack_code,
@@ -64,8 +60,8 @@ module Deploy
             process_queue
           end
 
-          desc "deploy", "Deploy the app to the server"
-          def pull_update
+          desc "pull_update", "Deploy the app to the server" do
+          #def pull_update
             queue [
               :set_prev_release_tag,
               :set_release_tag,
@@ -80,8 +76,7 @@ module Deploy
             process_queue
           end
 
-          desc "create_directories", "create the directory structure"
-          def create_directories
+          desc "create_directories", "create the directory structure" do
             mkdir "#{dep_config.get(:app_root)}/tmp"
             mkdir "#{dep_config.get(:shared_path)}/log"
             mkdir "#{dep_config.get(:shared_path)}/dep_config"
@@ -91,23 +86,20 @@ module Deploy
             remote "echo \"rvm --create use #{dep_config.get(:ruby_version) || 'default'}@#{dep_config.get(:app_name)}\" > #{dep_config.get(:app_root)}/.rvmrc"
           end
 
-          desc "get_and_pack_code", "Makes sure the code is up to date and then tars it up"
-          def get_and_pack_code
+          desc "get_and_pack_code", "Makes sure the code is up to date and then tars it up" do
             run_now! "cd #{dep_config.get(:local_root)}"
             run_now! "git pull origin master"
             run_now! "tar --exclude='.git' --exclude='log' --exclude='tmp' --exclude='vendor/ruby' -cjf /tmp/#{dep_config.get(:app_name)}.tar.bz2 *"
           end
 
-          desc "push_code", "Pushes the code to the server"
-          def push_code
+          desc "push_code", "Pushes the code to the server" do
             cmd = "rsync "
             cmd << dep_config.get(:extra_rsync_options) unless !dep_config.get(:extra_rsync_options)
             cmd << "/tmp/#{dep_config.get(:app_name)}.tar.bz2 #{dep_config.get(:username)}@#{dep_config.get(:remote)}:/tmp/"
             run_now! cmd
           end
 
-          desc "pull_code", "Pulls the code from the git repo"
-          def pull_code
+          desc "pull_code", "Pulls the code from the git repo" do
             tmp_path     = dep_config.get(:deploy_tmp_path)
             app_name     = dep_config.get(:app_name)
             local_repo   = "#{dep_config.get(:deploy_tmp_path)}/#{app_name}"
@@ -125,12 +117,11 @@ module Deploy
             remote "unzip -o #{local_repo}.zip -x log/* tmp/* vender/ruby/* .rvmrc"
           end
 
-          def set_release_tag
+          desc "set_release_tag", "Sets the release tag number" do
             dep_config.set "release_tag", Time.now.strftime('%Y%m%d%H%M%S')
           end
 
-          desc "unpack", "Unpacks the code to the correct directories"
-          def unpack
+          desc "unpack", "Unpacks the code to the correct directories" do
             file_exists "/tmp/#{dep_config.get(:app_name)}.tar.bz2",
               [
                 "cd #{dep_config.get(:releases_path)}/#{dep_config.get("release_tag")}",
@@ -141,13 +132,11 @@ module Deploy
             remote "chown -Rf #{dep_config.get(:remote_user)}:#{dep_config.get(:remote_group)} #{dep_config.get(:app_root)}"
           end
 
-          desc "create_release_dir", "creates the release directory"
-          def create_release_dir
+          desc "create_release_dir", "creates the release directory" do
             remote "mkdir #{dep_config.get(:releases_path)}/#{dep_config.get("release_tag")}"
           end
 
-          desc "link", "Create the links for which the code can be placed"
-          def link
+          desc "link", "Create the links for which the code can be placed" do
             link_exists(dep_config.get(:current_path), [ "rm #{dep_config.get(:current_path)}" ])
             remote "ln -s #{dep_config.get(:releases_path)}/#{dep_config.get("release_tag")} #{dep_config.get(:current_path)}"
             remote "ln -s #{dep_config.get(:shared_path)}/log #{dep_config.get(:current_path)}/log"
@@ -155,16 +144,14 @@ module Deploy
             remote "ln -s #{dep_config.get(:shared_path)}/tmp #{dep_config.get(:current_path)}/tmp"
           end
 
-          desc "bundle", "Runs bundle to make sure all the required gems are on the ststem"
-          def bundle
+          desc "bundle", "Runs bundle to make sure all the required gems are on the ststem" do
             remote "rvm rvmrc trust #{dep_config.get(:app_root)}"
             remote "cd #{dep_config.get(:current_path)}"
             remote "bundle install --without test development --deployment"
             remote "find #{dep_config.get(:shared_path)}/vendor -type d -name \"bin\" -exec chmod -Rf 775 '{}' \\;"
           end
 
-          desc "clean_up", "Deletes any old releases if there are more than the max configured releases"
-          def clean_up
+          desc "clean_up", "Deletes any old releases if there are more than the max configured releases" do
             remote "cd #{dep_config.get(:releases_path)}"
             remote "export NUM_RELEASES=`ls -trl -m1 | wc -l`"
             remote "export NUM_TO_REMOVE=$(( $NUM_RELEASES - #{dep_config.get(:max_num_releases)} ))"
@@ -175,8 +162,7 @@ module Deploy
               ]
           end
 
-          desc "restart", "Causes the server to restart for this app"
-          def restart
+          desc "restart", "Causes the server to restart for this app" do
             remote "touch #{dep_config.get(:current_path)}/tmp/restart.txt"
           end
 
@@ -186,8 +172,7 @@ module Deploy
             push!
           end
 
-          self.desc "revert", "Reverts a one of the previous deployments"
-          def revert
+          desc "revert", "Reverts a one of the previous deployments" do
             remote "cd #{dep_config.get(:releases_path)}"
             remote <<EOC
               counter=1
@@ -203,7 +188,7 @@ EOC
             push!
           end
 
-          def set_prev_release_tag
+          desc "set_prev_release_tag", "Sets the name of the previous version of the app deployed" do
             cmd = "cd #{dep_config.get(:releases_path)} && ls -tl -m1"
             return_value = run_now_with_return! ssh_cmd(cmd)
             if should_i_do_it?
@@ -213,7 +198,7 @@ EOC
             end
           end
 
-          def on_remote_failure
+          desc "on_remote_failure", "What will happen if the remote deployment fails" do
             puts "\n*** remote_failure ***"
             remote "cd #{dep_config.get(:app_root)}"
             if dep_config.get(:prev_release_tag)
@@ -227,7 +212,7 @@ EOC
             end
           end
 
-          def on_local_failure
+          desc "on_local_failure", "What will happen if the local deployment fails" do
             # Nothing to do here yet
             exit(1)
           end
