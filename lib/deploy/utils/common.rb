@@ -206,10 +206,15 @@ EOC
           def set_prev_release_tag
             cmd = "cd #{dep_config.get(:releases_path)} && ls -tl -m1"
             return_value = run_now_with_return! ssh_cmd(cmd)
-            dep_config.set(:prev_release_tag, return_value.split.reject{|v|v !~ /^\d+$/}.first.strip) if should_i_do_it?
+            if should_i_do_it?
+              prev_release_tag = return_value.split.reject{|v|v !~ /^\d+$/}.first.strip
+              dep_config.set(:prev_release_tag, prev_release_tag)
+              puts "Prev release tag #{prev_release_tag}"
+            end
           end
 
           def on_remote_failure
+            puts "\n*** remote_failure ***"
             remote "cd #{dep_config.get(:app_root)}"
             if dep_config.get(:prev_release_tag)
               on_good_exit "ls -l | grep #{dep_config.get(:release_tag)} 2>&1 > /dev/null",[

@@ -46,7 +46,7 @@ module Deploy
 
         if File.exists?(custom_recipe)
           require custom_recipe
-          recipe_clazz = eval("::#{::Deploy::Util.camelize(recipe)}")
+          recipe_clazz = eval("::#{::Deploy::Utils::String.camelize(recipe)}")
         else
           begin
             # Check if we are using an alias

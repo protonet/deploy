@@ -6,6 +6,8 @@ module Deploy
 
       attr_accessor :commands
 
+      @@appended_action ||= []
+
       class << self
 
         def descriptions
@@ -24,13 +26,17 @@ module Deploy
           @@actions = actions
         end
 
+        def append_action(action)
+          @@appended_action << action
+        end
+
         def actions
           @@actions ||= []
           @@actions
         end
 
         def run_actions(run_clazz)
-          actions.each do |action|
+          (actions + @@appended_action).each do |action|
             puts "\n*** #{action} ***" if verbose?
             run_clazz.send(action)
             status = run_clazz.push!
