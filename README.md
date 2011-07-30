@@ -74,19 +74,17 @@ Then you will need to create, or override the method you want and add the method
       append  :my_task_one
       prepend :my_task_two, :my_task_one
 
-      def do_my_tasks
+      desc "do_my_tasks", "runs others tasks" do
         queue [:my_task_one, :my_task_two]
         queue :my_task_one
         process_queue
       end
 
-      desc "my_task_one", "explation of what my task does"
-      def my_task_one
+      desc "my_task_one", "explation of what my task does" do
         # code...
       end
 
-      desc "my_task_two", "explation of what my task does"
-      def my_task_two
+      desc "my_task_two", "explation of what my task does" do
         # code...
       end
 

@@ -7,8 +7,8 @@ module Deploy
       attr_accessor :commands
 
       @@actions           ||= []
-      @@appended_actions  ||= []
       @@prepended_actions ||= []
+      @@appended_actions  ||= []
       @@descriptions      ||= []
 
       class << self
@@ -16,7 +16,7 @@ module Deploy
         def desc(method_name, description, &block)
           @@descriptions << [method_name, description]
 
-          send :define_method, method_name.to_sym do
+          define_method method_name.to_sym do
             self.instance_eval(&block)
           end
         end
