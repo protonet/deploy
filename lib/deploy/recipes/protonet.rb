@@ -24,7 +24,7 @@ module Deploy
       end
 
       def setup
-        self.class.actions = [
+        queue [
           :prepare_code,
           :bundle,
           :setup_db,
@@ -32,11 +32,11 @@ module Deploy
           :deploy_monit,
           :restart_apache
         ]
-        self.class.run_actions(self)
+        process_queue
       end
 
       def deploy
-        self.class.actions = [
+        queue [
           :prepare_code,
           :bundle,
           :migrate,
@@ -47,7 +47,7 @@ module Deploy
           :restart_services,
           :restart_apache,
         ]
-        self.class.run_actions(self)
+        process_queue
       end
 
       def deploy_monit

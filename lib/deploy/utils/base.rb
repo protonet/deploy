@@ -6,70 +6,67 @@ module Deploy
 
       attr_accessor :commands
 
-      @@appended_actions ||= []
+      @@actions           ||= []
+      @@appended_actions  ||= []
       @@prepended_actions ||= []
+      @@descriptions      ||= []
 
       class << self
 
-        def descriptions
-          @@descriptions ||= []
-        end
-
         def desc(method_name, description)
-          descriptions << [method_name, description]
+          @@descriptions << [method_name, description]
         end
 
         def all_descriptions
           descriptions.sort{|a,b| a.first <=> b.first}
         end
 
-        def actions=(actions)
-          @@actions = actions
-        end
-
-        def prepend_action(action, prepend_before = nil)
+        def prepend(action, prepend_before = nil)
           @@prepended_actions << [action, prepend_before]
         end
 
-        def append_action(action, apend_after = nil)
+        def append(action, apend_after = nil)
           @@appended_actions << [action, apend_after]
-        end
-
-        def actions
-          @@actions ||= []
-          @@actions
         end
 
         def merge_actions
           @@prepended_actions.each do |pa|
             if pa.last.nil?
-              actions.insert(0,pa.first)
+              @@actions.insert(0,pa.first)
             else
-              ind = actions.index(pa.last)
-              ind.nil? ? actions.insert(0, pa.first) : actions.insert(ind,pa.first)
+              ind = @@actions.index(pa.last)
+              ind.nil? ? @@actions.insert(0, pa.first) : @@actions.insert(ind,pa.first)
             end
           end
 
           @@appended_actions.each do |aa|
             if aa.last.nil?
-              actions.insert(-1, aa.first)
+              @@actions.insert(-1, aa.first)
             else
-              ind = actions.index(aa.last)
-              ind.nil? ? actions.insert(-1, aa.first) : actions.insert(ind + 1,aa.first)
+              ind = @@actions.index(aa.last)
+              ind.nil? ? @@actions.insert(-1, aa.first) : @@actions.insert(ind + 1,aa.first)
             end
           end
-
         end
 
-        def run_actions(run_clazz)
-          merge_actions
-          actions.each do |action|
-            puts "\n*** #{action} ***" if verbose?
-            run_clazz.send(action)
-            status = run_clazz.push!
-            run_clazz.send(:on_local_failure)  if should_i_do_it? && dep_config.get(:local_status)  == false
-            run_clazz.send(:on_remote_failure) if should_i_do_it? && dep_config.get(:remote_status) == false
-          end
+      end
+
+      def process_queue
+        self.class.merge_actions
+        @@actions.each do |action|
+          puts "\n*** #{action} ***" if verbose?
+          send(action)
+          status = push!
+          send(:on_local_failure)  if should_i_do_it? && dep_config.get(:local_status)  == false
+          send(:on_remote_failure) if should_i_do_it? && dep_config.get(:remote_status) == false
+        end
+      end
+
+      def queue(actions)
+        if actions.is_a?(Array)
+          @@actions = @@actions + actions
+        else
+          @@actions << action
         end
       end
 

@@ -6,13 +6,13 @@ module Deploy
         base.class_eval do
           desc "setup", "create the directory structure needed for a deployment"
           def setup
-            self.class.actions = [:create_directories]
-            self.class.run_actions(self)
+            queue [:create_directories]
+            process_queue
           end
 
           desc "deploy_create", "Deploy the app to the server, and completely wipe the database tables and recreate them"
           def push_create
-            self.class.actions = [
+            queue [
               :set_prev_release_tag,
               :set_release_tag,
               :get_and_pack_code,
@@ -26,12 +26,12 @@ module Deploy
               :clean_up,
               :restart
             ]
-            self.class.run_actions(self)
+            process_queue
           end
 
           desc "deploy_create", "Deploy the app to the server, and completely wipe the database tables and recreate them"
           def pull_create
-            self.class.actions = [
+            queue [
               :set_prev_release_tag,
               :set_release_tag,
               :create_release_dir,
@@ -43,12 +43,12 @@ module Deploy
               :clean_up,
               :restart
             ]
-            self.class.run_actions(self)
+            process_queue
           end
 
           desc "deploy", "Deploy the app to the server"
           def push_update
-            self.class.actions = [
+            queue [
               :set_prev_release_tag,
               :get_and_pack_code,
               :push_code,
@@ -61,12 +61,12 @@ module Deploy
               :clean_up,
               :restart
             ]
-            self.class.run_actions(self)
+            process_queue
           end
 
           desc "deploy", "Deploy the app to the server"
           def pull_update
-            self.class.actions = [
+            queue [
               :set_prev_release_tag,
               :set_release_tag,
               :create_release_dir,
@@ -77,7 +77,7 @@ module Deploy
               :clean_up,
               :restart
             ]
-            self.class.run_actions(self)
+            process_queue
           end
 
           desc "create_directories", "create the directory structure"
