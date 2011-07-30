@@ -6,7 +6,8 @@ module Deploy
 
       attr_accessor :commands
 
-      @@appended_action ||= []
+      @@appended_actions ||= []
+      @@prepended_actions ||= []
 
       class << self
 
@@ -26,8 +27,12 @@ module Deploy
           @@actions = actions
         end
 
-        def append_action(action)
-          @@appended_action << action
+        def prepend_action(action, prepend_before = nil)
+          @@prepended_actions << [action, prepend_before]
+        end
+
+        def append_action(action, apend_after = nil)
+          @@appended_actions << [action, apend_after]
         end
 
         def actions
@@ -35,8 +40,30 @@ module Deploy
           @@actions
         end
 
+        def merge_actions
+          @@prepended_actions.each do |pa|
+            if pa.last.nil?
+              actions.insert(0,pa.first)
+            else
+              ind = actions.index(pa.last)
+              ind.nil? ? actions.insert(0, pa.first) : actions.insert(ind,pa.first)
+            end
+          end
+
+          @@appended_actions.each do |aa|
+            if aa.last.nil?
+              actions.insert(-1, aa.first)
+            else
+              ind = actions.index(aa.last)
+              ind.nil? ? actions.insert(-1, aa.first) : actions.insert(ind + 1,aa.first)
+            end
+          end
+
+        end
+
         def run_actions(run_clazz)
-          (actions + @@appended_action).each do |action|
+          merge_actions
+          actions.each do |action|
             puts "\n*** #{action} ***" if verbose?
             run_clazz.send(action)
             status = run_clazz.push!
