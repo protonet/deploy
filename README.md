@@ -9,13 +9,15 @@ syntax
 Allows you to specify the environment, which can be used to write different recipes for different environments
 
     -r --recipe
-The ruby file with the methods that you want to execute
+The ruby file with the methods that you want to execute. Custom recipes should be placed under
+/deploy/recipes. See below for options and examples
 
     -m --method
 The method within the recipe that you want to execute
 
     -c --config
-You can specify a custom configuration file that is in a non standard location
+You can specify a custom configuration file that is in a non standard location. They will be autoloaded if they have
+the same name as the environment and are placed under deploy/configs/
 
     -d --dry
 Dry run. Show what will be done, but do not actually execute any commands
