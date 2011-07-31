@@ -26,7 +26,7 @@ require 'optparse'
 require 'deploy/config'
 require 'deploy/setup'
 
-require 'deploy/utils/string'
+require 'deploy/utils/support'
 require 'deploy/utils/remote_commands'
 require 'deploy/utils/base'
 require 'deploy/utils/common'

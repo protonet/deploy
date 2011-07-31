@@ -48,12 +48,20 @@ module Deploy
           file = create_file("#{VIRTUAL_APP_ROOT}/deploy/recipes", "#{@@params[:name]}.rb")
           return 1 if file.nil?
 
-          additional_require = ''
-          clazz_name         = ''
-          extends_file       = ''
-          prepends      = []
-          appends       = []
-          method_names  = []
+          if @@params[:extends]
+            recipe_name, recipe_clazz = Support.recipe_name(VIRTUAL_APP_ROOT, @@params[:extends])
+            extends_file = recipe_clazz
+          else
+            extends_file = '::Deploy::Utils::Base'
+            commons_include = true
+          end
+
+          additional_require = recipe_name
+          clazz_name         = Support.camelize(@@params[:name])
+
+          prepends      = @@params[:prepends] ? @@params[:prepends].split(' ') : []
+          appends       = @@params[:appends]  ? @@params[:appends].split(' ')  : []
+          method_names  = @@params[:methods]  ? @@params[:methods].split(' ')  : []
 
           result = ERB.new(recipe_template_contents).result(binding)
 

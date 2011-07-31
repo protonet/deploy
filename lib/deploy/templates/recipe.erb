@@ -5,6 +5,10 @@ require '<%= additional_require %>'
 
 class <%= clazz_name %> < <%= extends_file %>
 
+<% if commons_include %>
+  include ::Deploy::Utils::Common
+<% end %>
+
 <% prepends.each do |prepend| %>
   prepend :<%= prepend %>
 <% end %>
@@ -13,8 +17,8 @@ class <%= clazz_name %> < <%= extends_file %>
   append :<%= append %>
 <% end %>
 
-<% method_names.each do |method| %>
-  desc '<%= method %>', "" do
+<% method_names.each do |method_name| %>
+  desc '<%= method_name %>', "" do
   end
 <% end %>
 end
