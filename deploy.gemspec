@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project           = "deploy"
 
   s.add_development_dependency  "rake"
+  s.add_development_dependency  "haml"
   s.add_development_dependency  "bacon"
 
   s.files                       = `git ls-files`.split("\n")

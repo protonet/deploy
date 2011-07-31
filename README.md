@@ -37,6 +37,47 @@ syntax
         Allows you to pass a comma separated list of key=value pairs to be used in the app
         E.g. "TEST1=test1,TEST2=test2"
 
+    - g --generate:
+      Allows you to generate a config or recipe file for your current app
+      for config file you must specify the -e option to generate the file for that environment or specify
+      a comma separated list of key/value pairs that tell the generator the type of generated file the name and its values
+      e.g. type=config,name=my_config,git_repo=git@test.com:test.git,username=test...
+      This will give you a config file like this
+
+      set :git_repo,          "git@test.com:test.git"
+      set :username,          "test"
+      set :app_name,          ""
+      set :remote,            ""
+      set :max_num_releases,  "5"
+      set :extra_ssh_options, ""
+      set :remote_user,       "test"
+      set :remote_group,      ""
+      set :after_login,       ""
+
+
+      For recipe files you will need to specify the name of the recipe, the name of the recipe you want to extend
+      (or leave black to just extend from the base class), and then a list of methods you want generated
+      e.g. type=recipe,name=test_deploy,extends=rdm,methods=meth1 meth2 meth3,append=meth1,prepend meth3 meth1
+      This will give you a recipe like this
+
+      require 'deploy'
+      require 'deploy/recipes/rails_data_mapper'
+
+      class TextDeploy < ::Deploy::Recipes::RailsDataMapper
+
+        append  :meth1
+        prepend :meth3, :meth1
+
+        desc "meth1", "" do
+        end
+
+        desc "meth2", "" do
+        end
+
+        desc "meth3", "" do
+        end
+      end
+
 examples
 
 This will execute the deploy method in the RailsDataMapper class located in the lib/deploy/recipes folder if it exists
