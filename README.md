@@ -144,3 +144,8 @@ of methods in one go. You can queue an array of tasks or individual tasks
 
 The append and prepend methods will either add the action to the front or end of the queue of actions to be executed,
 or if you supply an optional second option of an action name, the action will put put in front or behind that action in the queue.
+
+TODO
+====
+
+describe the standard recipes
