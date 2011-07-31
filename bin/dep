@@ -6,6 +6,8 @@ require "#{File.dirname(File.expand_path(__FILE__))}/../lib/deploy"
 command = ARGV.join(' ')
 options = {}
 
+# puts command.inspect
+
 if match_data = (/^(.+)\s(.+):(.+)/.match(command))
   options[:environment] = match_data[1]
   options[:recipe]      = match_data[2]

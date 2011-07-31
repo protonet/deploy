@@ -63,7 +63,7 @@ This will give you a config file like this under deploy/configs/my_config.rb
 For recipe files you will need to specify the name of the recipe, the name of the recipe you want to extend
 (or leave black to just extend from the base class), and then a list of methods you want generated
 
-      e.g. type=recipe,name=test_deploy,extends=rdm,methods=meth1 meth2 meth3,append=meth1,prepend meth3 meth1
+      e.g. type=recipe,name=test_deploy,extends=rdm,methods="meth1 meth2 meth3",append=meth1,prepend="meth3 meth1"
 
 This will give you a recipe like this under deploy/recipes/test_deploy.rb
 

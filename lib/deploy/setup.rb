@@ -16,6 +16,9 @@ module Deploy
         list_recipes   = options[:list]
         return recipe_list if list_recipes
 
+        generate    = options[:generate]
+        return Deploy::Utils::Generator.generate(generate)
+
         show_methods   = options[:methods]
         recipe         = options[:recipe]
         should_revert  = options[:revert]
@@ -156,7 +159,7 @@ module Deploy
 
           return r_params[:methods] if options[:methods]
           return r_params[:revert]  if options[:revert]
-          return []                 if options[:list]
+          return []                 if options[:list] || options[:generate]
           r_params[:default]
         end
 
