@@ -42,8 +42,10 @@ E.g. "TEST1=test1,TEST2=test2"
 Allows you to generate a config or recipe file for your current app
 for config file you must specify the -e option to generate the file for that environment or specify
 a comma separated list of key/value pairs that tell the generator the type of generated file the name and its values
-e.g. type=config,name=my_config,git_repo=git@test.com:test.git,username=test...
-This will give you a config file like this
+
+      e.g. type=config,name=my_config,git_repo=git@test.com:test.git,username=test...
+
+This will give you a config file like this under deploy/configs/my_config.rb
 
       set :git_repo,          "git@test.com:test.git"
       set :username,          "test"
@@ -58,8 +60,10 @@ This will give you a config file like this
 
 For recipe files you will need to specify the name of the recipe, the name of the recipe you want to extend
 (or leave black to just extend from the base class), and then a list of methods you want generated
-e.g. type=recipe,name=test_deploy,extends=rdm,methods=meth1 meth2 meth3,append=meth1,prepend meth3 meth1
-This will give you a recipe like this
+
+      e.g. type=recipe,name=test_deploy,extends=rdm,methods=meth1 meth2 meth3,append=meth1,prepend meth3 meth1
+
+This will give you a recipe like this under deploy/recipes/test_deploy.rb
 
       require 'deploy'
       require 'deploy/recipes/rails_data_mapper'
