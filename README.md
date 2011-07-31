@@ -5,44 +5,44 @@ syntax
     dep -e|--environment -r|--recipe -m|--method [-c|--config] [-d|--dry] [-q|--quiet]
 
     -e --environment:
-        Allows you to specify the environment, which can be used to write different recipes for different environments
+Allows you to specify the environment, which can be used to write different recipes for different environments
 
     -r --recipe:
-        The ruby file with the methods that you want to execute
+The ruby file with the methods that you want to execute
 
     -m --method:
-        The method within the recipe that you want to execute
+The method within the recipe that you want to execute
 
     -c --config:
-        You can specify a custom configuration file that is in a non standard location
+You can specify a custom configuration file that is in a non standard location
 
     -d --dry:
-        Dry run. Show what will be done, but do not actually execute any commands
+Dry run. Show what will be done, but do not actually execute any commands
 
     -q --quiet:
-        By default everything is very verbose, if you wish to quiet the output you can specify this option
+By default everything is very verbose, if you wish to quiet the output you can specify this option
 
     -M --methods:
-        Displays all the methods that can be executed with the -m switch. Must be used with -r as only the methods
-        for that recipe will be displayed
+Displays all the methods that can be executed with the -m switch. Must be used with -r as only the methods
+for that recipe will be displayed
 
     -R --revert:
-        Allows you to revert to any previous release. Displays a list of all the archived releases and allows you to
-        choose which to switch to
+Allows you to revert to any previous release. Displays a list of all the archived releases and allows you to
+choose which to switch to
 
     -l --list
-        Lists all of the recipes availble for your project
+Lists all of the recipes availble for your project
 
     -p --parameters:
-        Allows you to pass a comma separated list of key=value pairs to be used in the app
-        E.g. "TEST1=test1,TEST2=test2"
+Allows you to pass a comma separated list of key=value pairs to be used in the app
+E.g. "TEST1=test1,TEST2=test2"
 
     - g --generate:
-      Allows you to generate a config or recipe file for your current app
-      for config file you must specify the -e option to generate the file for that environment or specify
-      a comma separated list of key/value pairs that tell the generator the type of generated file the name and its values
-      e.g. type=config,name=my_config,git_repo=git@test.com:test.git,username=test...
-      This will give you a config file like this
+Allows you to generate a config or recipe file for your current app
+for config file you must specify the -e option to generate the file for that environment or specify
+a comma separated list of key/value pairs that tell the generator the type of generated file the name and its values
+e.g. type=config,name=my_config,git_repo=git@test.com:test.git,username=test...
+This will give you a config file like this
 
       set :git_repo,          "git@test.com:test.git"
       set :username,          "test"
@@ -55,10 +55,10 @@ syntax
       set :after_login,       ""
 
 
-      For recipe files you will need to specify the name of the recipe, the name of the recipe you want to extend
-      (or leave black to just extend from the base class), and then a list of methods you want generated
-      e.g. type=recipe,name=test_deploy,extends=rdm,methods=meth1 meth2 meth3,append=meth1,prepend meth3 meth1
-      This will give you a recipe like this
+For recipe files you will need to specify the name of the recipe, the name of the recipe you want to extend
+(or leave black to just extend from the base class), and then a list of methods you want generated
+e.g. type=recipe,name=test_deploy,extends=rdm,methods=meth1 meth2 meth3,append=meth1,prepend meth3 meth1
+This will give you a recipe like this
 
       require 'deploy'
       require 'deploy/recipes/rails_data_mapper'
