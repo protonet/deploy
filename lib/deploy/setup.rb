@@ -104,7 +104,7 @@ module Deploy
       end
 
       def config_environment
-        load_config("#{VIRTUAL_APP_ROOT}/deploy/environments/#{dep_config.get(:env)}.rb")
+        load_config("#{VIRTUAL_APP_ROOT}/deploy/configs/#{dep_config.get(:env)}.rb")
       end
 
       def custom_config(file)
