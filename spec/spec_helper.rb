@@ -1,9 +1,6 @@
 require "deploy"
 require 'bacon'
 
-puts APP_ROOT
-puts VIRTUAL_APP_ROOT
-
 ::Deploy::Config.set :env,         'test'
 ::Deploy::Config.set :dry_run,     true
 

@@ -17,7 +17,7 @@ module Deploy
         return recipe_list if list_recipes
 
         generate    = options[:generate]
-        return ::Deploy::Utils::Generator.generate(generate)
+        return ::Deploy::Utils::Generator.generate(generate) if generate
 
         show_methods   = options[:methods]
         recipe         = options[:recipe]
