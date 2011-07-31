@@ -1,0 +1,20 @@
+require 'deploy'
+<% if additional_require %>
+require '<%= additional_require %>'
+<% end %>
+
+class <%= clazz_name %> < <%= extends_file %>
+
+<% prepends.each do |prepend| %>
+  prepend :<%= prepend %>
+<% end %>
+
+<% appends.each do |append| %>
+  append :<%= append %>
+<% end %>
+
+<% method_names.each do |method| %>
+  desc '<%= method %>', "" do
+  end
+<% end %>
+end

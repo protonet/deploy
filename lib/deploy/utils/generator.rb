@@ -27,38 +27,66 @@ module Deploy
 
           require 'fileutils'
 
-          file_path = "#{VIRTUAL_APP_ROOT}/deploy/configs"
+          file = create_file("#{VIRTUAL_APP_ROOT}/deploy/configs", "#{@@params[:name]}.rb")
+          return 1 if file.nil?
 
-          unless File.exist?(file_path)
-            puts "Creating #{file_path}"
-            FileUtils.mkdir_p file_path
+          @@params.each do |k,v|
+            puts "Setting #{k} to #{v}"
+            file.write("set :#{k}, \"#{v}\"\n") unless [:type,:name].include?(k)
           end
+          puts "Done!"
 
-          unless File.exist?(file_name = "#{file_path}/#{@@params[:name]}.rb")
-            puts "Generating #{file_name}..."
-            File.open(file_name, 'w') do |f|
-              @@params.each do |k,v|
-                puts "Setting #{k} to #{v}"
-                f.write("set :#{k}, \"#{v}\"\n") unless [:type,:name].include?(k)
-              end
-              puts "Done!"
-            end
-
-            return 0
-          else
-            puts "#{file_path}/#{@@params[:name]}.rb already exists. Will not overwrite!"
-            return 1
-          end
+          return 0
+        ensure
+          file.close if file
         end
 
         def recipe
+          require 'fileutils'
+          require 'erb'
 
+          file = create_file("#{VIRTUAL_APP_ROOT}/deploy/recipes", "#{@@params[:name]}.rb")
+          return 1 if file.nil?
+
+          additional_require = ''
+          clazz_name         = ''
+          extends_file       = ''
+          prepends      = []
+          appends       = []
+          method_names  = []
+
+          result = ERB.new(recipe_template_contents).result(binding)
+
+          file.write(result)
+          return 0
+        ensure
+          file.close if file
+        end
+
+        def recipe_template_contents
+          return @contents if @contents
+          @contents = ""
+          File.open("#{APP_ROOT}/lib/deploy/templates/recipe.erb",'r'){|f| @contents = f.read}
+          @contents
+        end
+
+        def create_file(path, filename)
+
+          unless File.exist?(path)
+            puts "Creating #{path}"
+            FileUtils.mkdir_p path
+          end
+
+          unless File.exist?(file_name = "#{path}/#{filename}")
+            puts "Generating #{file_name}..."
+            return File.new(file_name, "w")
+          else
+            puts "#{file_name} already exists. Will not overwrite!"
+          end
+
+          return nil
         end
       end
-
-
-
-
     end
   end
 end
