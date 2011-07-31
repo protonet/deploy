@@ -42,6 +42,11 @@ module Deploy
         end
 
         def recipe
+          unless @@params[:name]
+            puts "You have not specified a name of for the recipe"
+            return 1
+          end
+
           require 'fileutils'
           require 'erb'
 
@@ -63,7 +68,7 @@ module Deploy
           appends       = @@params[:appends]  ? @@params[:appends].split(' ')  : []
           method_names  = @@params[:methods]  ? @@params[:methods].split(' ')  : []
 
-          result = ERB.new(recipe_template_contents).result(binding)
+          result = ERB.new(recipe_template_contents, nil, '<>').result(binding)
 
           file.write(result)
           return 0

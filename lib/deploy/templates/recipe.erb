@@ -4,7 +4,6 @@ require '<%= additional_require %>'
 <% end %>
 
 class <%= clazz_name %> < <%= extends_file %>
-
 <% if commons_include %>
   include ::Deploy::Utils::Common
 <% end %>
@@ -20,5 +19,6 @@ class <%= clazz_name %> < <%= extends_file %>
 <% method_names.each do |method_name| %>
   desc '<%= method_name %>', "" do
   end
+
 <% end %>
 end
