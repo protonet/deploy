@@ -4,40 +4,41 @@ syntax
 
     dep -e|--environment -r|--recipe -m|--method [-c|--config] [-d|--dry] [-q|--quiet]
 
-    -e --environment:
+
+    -e --environment
 Allows you to specify the environment, which can be used to write different recipes for different environments
 
-    -r --recipe:
+    -r --recipe
 The ruby file with the methods that you want to execute
 
-    -m --method:
+    -m --method
 The method within the recipe that you want to execute
 
-    -c --config:
+    -c --config
 You can specify a custom configuration file that is in a non standard location
 
-    -d --dry:
+    -d --dry
 Dry run. Show what will be done, but do not actually execute any commands
 
-    -q --quiet:
+    -q --quiet
 By default everything is very verbose, if you wish to quiet the output you can specify this option
 
-    -M --methods:
+    -M --methods
 Displays all the methods that can be executed with the -m switch. Must be used with -r as only the methods
 for that recipe will be displayed
 
-    -R --revert:
+    -R --revert
 Allows you to revert to any previous release. Displays a list of all the archived releases and allows you to
 choose which to switch to
 
     -l --list
 Lists all of the recipes availble for your project
 
-    -p --parameters:
+    -p --parameters
 Allows you to pass a comma separated list of key=value pairs to be used in the app
 E.g. "TEST1=test1,TEST2=test2"
 
-    - g --generate:
+    - g --generate
 Allows you to generate a config or recipe file for your current app
 for config file you must specify the -e option to generate the file for that environment or specify
 a comma separated list of key/value pairs that tell the generator the type of generated file the name and its values
