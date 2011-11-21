@@ -30,7 +30,8 @@ module Deploy
           :setup_db,
           :link_current,
           :deploy_monit,
-          :restart_apache
+          :restart_apache,
+          :start_first_run_services
         ]
         process_queue
       end
@@ -186,6 +187,12 @@ module Deploy
 
       def restart_services
         monit_command "-g daemons restart all"
+      end
+      
+      def start_first_run_services
+        FileUtils.cd latest_deploy do
+          run_now! "#{bundle_cleanup}; export RAILS_ENV=#{dep_config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
+        end
       end
 
     end
