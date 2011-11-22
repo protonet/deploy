@@ -31,7 +31,8 @@ module Deploy
           :link_current,
           :deploy_monit,
           :restart_apache,
-          :start_first_run_services
+          :start_first_run_services,
+          :load_crontab
         ]
         self.class.run_actions(self)
       end
@@ -47,6 +48,7 @@ module Deploy
           :deploy_monit,
           :restart_services,
           :restart_apache,
+          :load_crontab
         ]
         self.class.run_actions(self)
       end
@@ -192,6 +194,12 @@ module Deploy
       def start_first_run_services
         FileUtils.cd latest_deploy do
           run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
+        end
+      end
+      
+      def load_crontab
+        FileUtils.cd latest_deploy do
+          run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; script/init/cron update"
         end
       end
 
