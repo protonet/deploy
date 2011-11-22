@@ -61,7 +61,6 @@ module Deploy
           end
 
           desc "pull_update", "Deploy the app to the server" do
-          #def pull_update
             queue [
               :set_prev_release_tag,
               :set_release_tag,
@@ -83,7 +82,6 @@ module Deploy
             mkdir "#{dep_config.get(:shared_path)}/vendor"
             mkdir "#{dep_config.get(:shared_path)}/tmp"
             mkdir "#{dep_config.get(:releases_path)}"
-            remote "echo \"rvm --create use #{dep_config.get(:ruby_version) || 'default'}@#{dep_config.get(:app_name)}\" > #{dep_config.get(:app_root)}/.rvmrc"
           end
 
           desc "get_and_pack_code", "Makes sure the code is up to date and then tars it up" do
@@ -114,7 +112,7 @@ module Deploy
             file_exists "#{local_repo}.zip", [ "rm #{local_repo}.zip" ]
             remote "git archive -o #{local_repo}.zip HEAD"
             remote "cd #{release_slot}"
-            remote "unzip -o #{local_repo}.zip -x log/* tmp/* vender/ruby/* .rvmrc"
+            remote "unzip -o #{local_repo}.zip -x log/* tmp/* vender/ruby/*"
           end
 
           desc "set_release_tag", "Sets the release tag number" do
@@ -145,7 +143,7 @@ module Deploy
           end
 
           desc "bundle", "Runs bundle to make sure all the required gems are on the ststem" do
-            remote "rvm rvmrc trust #{dep_config.get(:app_root)}"
+            remote "rvm rvmrc trust #{dep_config.get(:current_path)}"
             remote "cd #{dep_config.get(:current_path)}"
             remote "bundle install --without test development --deployment"
             remote "find #{dep_config.get(:shared_path)}/vendor -type d -name \"bin\" -exec chmod -Rf 775 '{}' \\;"
@@ -192,9 +190,14 @@ EOC
             cmd = "cd #{dep_config.get(:releases_path)} && ls -tl -m1"
             return_value = run_now_with_return! ssh_cmd(cmd)
             if should_i_do_it?
-              prev_release_tag = return_value.split.reject{|v|v !~ /^\d+$/}.first.strip
-              dep_config.set(:prev_release_tag, prev_release_tag)
-              puts "Prev release tag #{prev_release_tag}"
+              prev_release_tag = return_value.split.reject{|v|v !~ /^\d+$/}.first
+              if prev_release_tag
+                prev_release_tag = prev_release_tag.strip
+                dep_config.set(:prev_release_tag, prev_release_tag)
+                puts "Prev release tag #{prev_release_tag}"
+              else
+                puts "No previous release tag"
+              end
             end
           end
 
@@ -202,6 +205,7 @@ EOC
             puts "\n*** remote_failure ***"
             remote "cd #{dep_config.get(:app_root)}"
             if dep_config.get(:prev_release_tag)
+              puts "Rolling back to previous release #{dep_config.get(:release_tag)}"
               on_good_exit "ls -l | grep #{dep_config.get(:release_tag)} 2>&1 > /dev/null",[
                 "rm #{dep_config.get(:current_path)}",
                 "ln -s #{dep_config.get(:releases_path)}/#{dep_config.get(:prev_release_tag)} #{dep_config.get(:current_path)}",
