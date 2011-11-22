@@ -191,7 +191,7 @@ module Deploy
       
       def start_first_run_services
         FileUtils.cd latest_deploy do
-          run_now! "#{bundle_cleanup}; export RAILS_ENV=#{dep_config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
+          run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
         end
       end
 
