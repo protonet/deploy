@@ -68,7 +68,7 @@ module Deploy
               :pull_code,
               :link,
               :bundle,
-              :auto_upgrade,
+              #:auto_upgrade,
               :clean_up,
               :restart
             ]
