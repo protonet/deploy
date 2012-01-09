@@ -55,8 +55,9 @@ module Deploy
 
       def deploy_monit
         # variables for erb
-        shared_path   = config.get(:shared_path)
-        current_path  = config.get(:current_path)
+        shared_path     = config.get(:shared_path)
+        current_path    = config.get(:current_path)
+        monit_password  = (1..16).collect { (i = Kernel.rand(62); i += ((i < 10) ? 48 : ((i < 36) ? 55 : 61 ))).chr }.join
 
         File.open("#{config.get(:shared_path)}/config/monit_ptn_node", 'w') do |f|
           f.write(ERB.new(IO.read("#{latest_deploy}/config/monit/monit_ptn_node.erb")).result(binding))
