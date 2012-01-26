@@ -25,16 +25,15 @@ module Deploy
           else
             begin
               # Check if we are using an alias
-              # puts "THE RECIPE IS #{recipe}"
               alias_recipe = dep_config.get_clazz(recipe)
-              recipe = alias_recipe if alias_recipe && alias_recipe != recipe
+              recipe       = alias_recipe if alias_recipe && alias_recipe != recipe
 
               recipe_name = "deploy/recipes/#{recipe}"
               require recipe_name
               recipe_clazz = eval("::Deploy::Recipes::#{Support.camelize(recipe)}")
             rescue Exception => e
-              puts "Error: #{e}"
               # The recipe that was specified does not exist in the default recipes
+              puts "Error: #{e}"
             end
           end
 
@@ -120,9 +119,9 @@ module Deploy
 
         def required_params(options)
           r_params = {
-            :default => [:recipe, :environment, :method],
-            :methods => [:recipe],
-            :revert  => [:recipe, :environment],
+            :default => [:environment, :method],
+            :methods => [],
+            :revert  => [:environment],
           }
 
           return r_params[:methods] if options[:methods]

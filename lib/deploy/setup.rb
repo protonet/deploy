@@ -4,6 +4,7 @@ module Deploy
     class << self
 
       def init(options, summary)
+        # options = ::Deploy::Utils::Support.clean_options(options)
         # Check whether we have the minimum set of options
         ::Deploy::Utils::Support.required_params(options).each do |param|
           unless options.keys.include?(param)
@@ -12,7 +13,7 @@ module Deploy
           end
         end
 
-        # Assaign the parsed options to local variables
+        # Assign the parsed options to local variables
         list_recipes   = options[:list]
         return recipe_list if list_recipes
 
@@ -20,9 +21,9 @@ module Deploy
         return ::Deploy::Utils::Generator.generate(generate) if generate
 
         show_methods   = options[:methods]
-        recipe         = options[:recipe]
+        recipe         = options[:recipe] || options[:environment]
         should_revert  = options[:revert]
-        method = should_revert ? "revert" : options[:method]
+        method         = should_revert ? "revert" : options[:method]
         config_file    = options[:config]
 
         ::Deploy::Utils::Support.set_parameters(options[:parameters])
