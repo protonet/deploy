@@ -176,7 +176,7 @@ module Deploy
       
       def npm_install
         shared_dir  = File.expand_path('node_modules', config.get(:shared_path))
-        release_dir = File.expand_path('node_modules', latest_deploy)
+        release_dir = File.expand_path('node/node_modules', latest_deploy)
 
         FileUtils.mkdir_p shared_dir
         FileUtils.ln_s shared_dir, release_dir
