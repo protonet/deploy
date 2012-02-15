@@ -181,7 +181,7 @@ module Deploy
         FileUtils.mkdir_p shared_dir
         FileUtils.ln_s shared_dir, release_dir
         
-        run_now! "cd #{latest_deploy)}/node; export NODE_ENV='production'; npm install"
+        run_now! "cd #{latest_deploy}/node; export NODE_ENV='production'; npm install"
       end
 
       def migrate
