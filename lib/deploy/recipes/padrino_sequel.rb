@@ -1,8 +1,8 @@
 module Deploy
   module Recipes
-    class PadrinoSequel < ::Deploy::Utils::Base
+    class PadrinoSequel < ::Deploy::Base
 
-      include ::Deploy::Utils::Common
+      include ::Deploy::Common
 
       desc "migrate_up", "Trys to migrate the database to the current state. Won't destroy any data" do
         remote "cd #{dep_config.get(:current_path)}"

@@ -15,8 +15,8 @@ module Deploy
       list_recipes   = options[:list]
       return recipe_list if list_recipes
 
-      support   = ::Deploy::Utils::Support
-      generator = ::Deploy::Utils::Generator
+      support   = ::Deploy::Support
+      generator = ::Deploy::Generator
 
       generate    = options[:generate]
       return generator.generate(generate) if generate
@@ -42,7 +42,7 @@ module Deploy
       support.custom_config(config_file) if config_file
 
       # Load the recipe
-      recipe_name, recipe_clazz = support.recipe_name(dep_config.get(:env))
+      recipe_clazz = support.recipe_class(dep_config.get(:env))
 
       return support.methods_list(recipe_clazz) if show_methods
 

@@ -1,8 +1,8 @@
 module Deploy
   module Recipes
-    class RailsDataMapper < ::Deploy::Utils::Base
+    class RailsDataMapper < ::Deploy::Base
 
-      include ::Deploy::Utils::Common
+      include ::Deploy::Common
 
       desc "setup_db", "Creates the database" do
         remote "cd #{dep_config.get(:current_path)}"

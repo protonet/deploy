@@ -37,5 +37,9 @@ describe "All Recipes" do
       end
     end
   end
+
+  it 'gets the recipe from the environment receipe file' do
+    Deploy::Utils::Support.parse_for("#{File.dirname(File.expand_path(__FILE__))}/fixtures/test.rb", :recipe).should == :padrino_data_mapper
+  end
 end
 

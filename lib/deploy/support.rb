@@ -9,48 +9,34 @@ module Deploy
         string.gsub("_", "")
       end
 
-      def self.recipe_name(environment)
-        map_default_recipes
-
+      def self.recipe_class(environment)
         environment_recipe = "#{VIRTUAL_APP_ROOT}/deploy/recipes/#{environment}.rb"
-        parse_for_recipe(environment_recipe)
+        recipe_name = parse_for(environment_recipe, :recipe)
+        require recipe_name
 
         recipe_clazz = nil
-        recipe_name = ''
 
-        if File.exists?(custom_recipe)
-          require custom_recipe
-          recipe_name = custom_recipe
-          recipe_clazz = eval("::#{camelize(recipe)}")
-        else
-          begin
-            # Check if we are using an alias
-            alias_recipe = dep_config.get_clazz(recipe)
-            recipe       = alias_recipe if alias_recipe && alias_recipe != recipe
-
-            recipe_name = "deploy/recipes/#{recipe}"
-            require recipe_name
-            recipe_clazz = eval("::Deploy::Recipes::#{camelize(recipe)}")
-          rescue Exception => e
-            # The recipe that was specified does not exist in the default recipes
-            puts "Error: #{e}"
-          end
+        begin
+          recipe_clazz = eval("::Deploy::Recipes::#{camelize(recipe)}")
+        rescue Exception => e
+          # The recipe that was specified does not exist in the default recipes
+          puts "Error: #{e}"
         end
 
-        [recipe_name, recipe_clazz]
+        recipe_clazz
       end
 
       def self.parse_for(file, param)
         load_environment_recipe_file(file).each do |line|
           if /#{param}\s+(.+)/ =~ line
-            return $1
+            return eval($1)
           end
         end
       end
 
-      def load_environment_recipe_file(file)
+      def self.load_environment_recipe_file(file)
         return @environment_recipe_file if @environment_recipe_file
-        @environment_recipe_file = File.read_lines(file)
+        @environment_recipe_file = File.readlines(file)
       end
 
       def self.methods_list(recipe_clazz)
@@ -80,12 +66,6 @@ module Deploy
         sorted_files.sort.each {|sorted_file| puts sorted_file}
 
         return 0
-      end
-
-      def self.map_default_recipes
-        dep_config.set_clazz "pdm", "padrino_data_mapper"
-        dep_config.set_clazz "rdm", "rails_data_mapper"
-        dep_config.set_clazz "pn",  "protonet"
       end
 
       def self.config_environment
