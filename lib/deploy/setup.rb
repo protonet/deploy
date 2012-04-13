@@ -2,9 +2,8 @@ module Deploy
   class Setup
 
     def self.init(options, summary)
-      # options = ::Deploy::Utils::Support.clean_options(options)
       # Check whether we have the minimum set of options
-      ::Deploy::Utils::Support.required_params(options).each do |param|
+      ::Deploy::Util.required_params(options).each do |param|
         unless options.keys.include?(param)
           puts summary if should_i_do_it?
           return 1
@@ -15,7 +14,7 @@ module Deploy
       list_recipes   = options[:list]
       return recipe_list if list_recipes
 
-      support   = ::Deploy::Support
+      support   = ::Deploy::Util
       generator = ::Deploy::Generator
 
       generate    = options[:generate]

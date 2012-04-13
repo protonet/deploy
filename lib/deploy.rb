@@ -2,7 +2,7 @@
 APP_ROOT = "#{File.dirname(File.expand_path(__FILE__))}/.."
 
 # This is set to the directory where deploy is run from
-VIRTUAL_APP_ROOT = "#{File.expand_path(File.new(".").path)}"
+VIRTUAL_APP_ROOT = "#{File.expand_path(File.new(".").path)}" unless defined?(VIRTUAL_APP_ROOT)
 
 $: << "#{APP_ROOT}/lib"
 
@@ -26,9 +26,12 @@ require 'optparse'
 require 'deploy/config'
 require 'deploy/setup'
 
-require 'deploy/utils/support'
-require 'deploy/utils/remote_commands'
-require 'deploy/utils/base'
-require 'deploy/utils/common'
-require 'deploy/utils/generator'
+require 'deploy/util'
+require 'deploy/remote_commands'
+require 'deploy/dsl'
+require 'deploy/remote_commands'
+require 'deploy/process'
+require 'deploy/base'
+require 'deploy/common'
+require 'deploy/generator'
 

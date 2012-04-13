@@ -1,5 +1,5 @@
 module Deploy
-  class Process
+  module Process
 
     def self.included(base)
       base.class_eval do

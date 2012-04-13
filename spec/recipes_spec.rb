@@ -25,7 +25,7 @@ describe "All Recipes" do
     end
   end
 
-  it "should allow you to pass in parameters" do
+  it "allows you to pass in parameters" do
     recipes.each do |recipe, recipe_methods|
       recipe_methods.each do |recipe_method|
         @options[:recipe] = recipe.to_s
@@ -38,8 +38,5 @@ describe "All Recipes" do
     end
   end
 
-  it 'gets the recipe from the environment receipe file' do
-    Deploy::Utils::Support.parse_for("#{File.dirname(File.expand_path(__FILE__))}/fixtures/test.rb", :recipe).should == :padrino_data_mapper
-  end
 end
 

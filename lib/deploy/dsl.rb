@@ -1,5 +1,5 @@
 module Deploy
-  class DSL
+  module DSL
 
     def self.included(base)
       base.class_eval do
