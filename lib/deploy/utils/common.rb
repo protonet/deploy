@@ -20,7 +20,7 @@ module Deploy
               :link,
               :bundle,
               :setup_db,
-              :auto_migrate,
+              #:auto_migrate,
               :clean_up,
               :restart
             ]
@@ -36,7 +36,7 @@ module Deploy
               :link,
               :bundle,
               :setup_db,
-              :auto_migrate,
+              #:auto_migrate,
               :clean_up,
               :restart
             ]

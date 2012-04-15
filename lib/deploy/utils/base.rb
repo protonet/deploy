@@ -39,7 +39,7 @@ module Deploy
               @@actions.insert(0,pa.first)
             else
               ind = @@actions.index(pa.last)
-              ind.nil? ? @@actions.insert(0, pa.first) : @@actions.insert(ind,pa.first)
+              @@actions.insert(ind,pa.first) unless ind.nil?
             end
           end
 
@@ -48,7 +48,7 @@ module Deploy
               @@actions.insert(-1, aa.first)
             else
               ind = @@actions.index(aa.last)
-              ind.nil? ? @@actions.insert(-1, aa.first) : @@actions.insert(ind + 1,aa.first)
+              @@actions.insert(ind + 1,aa.first) unless ind.nil?
             end
           end
         end

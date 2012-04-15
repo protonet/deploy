@@ -3,6 +3,11 @@ module Deploy
     class Support
       class << self
 
+        def clean_options(options)
+
+
+        end
+
         def camelize(string)
           indexes = [0]
           string.size.times { |i| indexes << (i + 1) if string[i,1] == '_' }

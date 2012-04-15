@@ -4,6 +4,9 @@ module Deploy
 
       include ::Deploy::Utils::Common
 
+      desc "setup_db", "" do
+      end
+
       desc "migrate_up", "Trys to migrate the database to the current state. Won't destroy any data" do
         remote "cd #{dep_config.get(:current_path)}"
         remote "bundle exec padrino rake sq:migrate:up -e #{dep_config.get(:env)}"
