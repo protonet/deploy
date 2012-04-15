@@ -1,8 +1,8 @@
 module Deploy
   module Recipes
-    class PadrinoDataMapper < ::Deploy::Utils::Base
+    class PadrinoDataMapper < ::Deploy::Base
 
-      include ::Deploy::Utils::Common
+      include ::Deploy::Common
 
       desc "setup_db", "Creates the database" do
         remote "cd #{dep_config.get(:current_path)}"

@@ -1,8 +1,8 @@
 module Deploy
   module Recipes
-    class PadrinoSequel < ::Deploy::Utils::Base
+    class PadrinoSequel < ::Deploy::Base
 
-      include ::Deploy::Utils::Common
+      include ::Deploy::Common
 
       desc "setup_db", "" do
       end

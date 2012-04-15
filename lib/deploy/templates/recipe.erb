@@ -1,12 +1,4 @@
-require 'deploy'
-<% if additional_require %>
-require '<%= additional_require %>'
-<% end %>
-
-class <%= clazz_name %> < <%= extends_file %>
-<% if commons_include %>
-  include ::Deploy::Utils::Common
-<% end %>
+recipe <%= clazz_name %>
 
 <% prepends.each do |prepend| %>
   prepend :<%= prepend %>

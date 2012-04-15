@@ -25,7 +25,7 @@ describe "All Recipes" do
     end
   end
 
-  it "should allow you to pass in parameters" do
+  it "allows you to pass in parameters" do
     recipes.each do |recipe, recipe_methods|
       recipe_methods.each do |recipe_method|
         @options[:recipe] = recipe.to_s
@@ -37,5 +37,6 @@ describe "All Recipes" do
       end
     end
   end
+
 end
 

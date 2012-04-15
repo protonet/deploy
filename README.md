@@ -8,10 +8,6 @@ syntax
     -e --environment
 Allows you to specify the environment, which can be used to write different recipes for different environments
 
-    -r --recipe
-The ruby file with the methods that you want to execute. Custom recipes should be placed under
-/deploy/recipes. See below for options and examples
-
     -m --method
 The method within the recipe that you want to execute
 
@@ -115,29 +111,25 @@ Within here create a file called for example
 within the file you will need to require deploy and the recipe you want to extend.
 Then you will need to create, or override the method you want and add the method to the list of actions to be executed
 
-    require 'deploy'
-    require 'deploy/recipes/rails_data_mapper'
+    recipe :rails_data_mapper
 
-    class MyDeploy < ::Deploy::Recipes::RailsDataMapper
+    append  :my_task_one
+    prepend :my_task_two, :my_task_one
 
-      append  :my_task_one
-      prepend :my_task_two, :my_task_one
-
-      desc "do_my_tasks", "runs others tasks" do
-        queue [:my_task_one, :my_task_two]
-        queue :my_task_one
-        process_queue
-      end
-
-      desc "my_task_one", "explation of what my task does" do
-        # code...
-      end
-
-      desc "my_task_two", "explation of what my task does" do
-        # code...
-      end
-
+    desc "do_my_tasks", "runs others tasks" do
+      queue [:my_task_one, :my_task_two]
+      queue :my_task_one
+      process_queue
     end
+
+    desc "my_task_one", "explation of what my task does" do
+      # code...
+    end
+
+    desc "my_task_two", "explation of what my task does" do
+      # code...
+    end
+
 
 Then you should just be about to call dep as normal passing in my_deploy as the recipe (-r) and do_my_tasks as the method (-m)
 You could also just call the tasks themselves (-m my_task_one). But the do_my_tasks method shows how you can execute a batch
