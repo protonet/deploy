@@ -15,14 +15,17 @@ describe "All Recipes" do
     }
   end
 
-  it "should run" do
+  it "runs" do
     recipes.each do |recipe, recipe_methods|
       recipe_methods.each do |recipe_method|
-        @options[:recipe] = recipe.to_s
         @options[:method] = recipe_method
         ::Deploy::Setup.init(@options, "").should == 0
       end
     end
+  end
+
+  it "appends a method in the chain" do
+    ::Deploy::Setup.init(@options.merge({:method => 'test'}), "").should == 0
   end
 
   it "allows you to pass in parameters" do
@@ -37,6 +40,8 @@ describe "All Recipes" do
       end
     end
   end
+
+
 
 end
 

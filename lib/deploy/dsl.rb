@@ -9,8 +9,7 @@ module Deploy
         @@appended_actions  ||= []
         @@descriptions      ||= []
 
-
-        def self.recipe(recipe);end
+        def self.recipe(recipe); end
 
         def self.desc(method_name, description, &block)
           @@descriptions << [method_name, description]

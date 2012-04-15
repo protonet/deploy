@@ -2,6 +2,7 @@ module Deploy
   class Util
 
     def self.camelize(string)
+      string = string.to_s
       indexes = [0]
       string.size.times { |i| indexes << (i + 1) if string[i,1] == '_' }
       indexes.each    { |i| string[i] = string[i,1].upcase }
@@ -11,18 +12,11 @@ module Deploy
     def self.recipe_class(environment)
       environment_recipe = "#{VIRTUAL_APP_ROOT}/deploy/recipes/#{environment}.rb"
       recipe_name = parse_for(environment_recipe, :recipe)
-      # require "#{VIRTUAL_APP_ROOT}/deploy/recipes/#{environment}.rb"
+
       require "#{APP_ROOT}/lib/deploy/recipes/#{recipe_name}.rb"
 
-      recipe_clazz = nil
-
-      begin
-        recipe_clazz = eval("::Deploy::Recipes::#{camelize(recipe)}")
-      rescue Exception => e
-        # The recipe that was specified does not exist in the default recipes
-        puts "Error: #{e}"
-      end
-
+      recipe_clazz = eval("::Deploy::Recipes::#{camelize(recipe_name)}")
+      recipe_clazz.send :eval, load_environment_recipe_file(environment_recipe).join('')
       recipe_clazz
     end
 
