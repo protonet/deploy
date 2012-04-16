@@ -53,11 +53,7 @@ module Deploy
         end
       end
 
-      Dir["#{VIRTUAL_APP_ROOT}/deploy/recipes/*.rb"].each do |file_name|
-        sorted_files << file_name.split('/').last.split('.').first
-      end
-
-      sorted_files.sort.each {|sorted_file| puts sorted_file}
+      sorted_files.each {|sorted_file| puts sorted_file}
 
       return 0
     end
