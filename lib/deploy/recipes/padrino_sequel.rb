@@ -2,8 +2,6 @@ module Deploy
   module Recipes
     class PadrinoSequel < ::Deploy::Base
 
-      include ::Deploy::Common
-
       desc "setup_db", "", true do
       end
 

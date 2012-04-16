@@ -1,5 +1,5 @@
 module Deploy
-  module Common
+  module CommonMethods
 
     def self.included(base)
       base.class_eval do

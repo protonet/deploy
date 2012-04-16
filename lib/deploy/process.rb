@@ -8,7 +8,7 @@ module Deploy
 
         def process_queue
           self.class.merge_actions
-          @@actions.each do |action|
+          self.class.actions.each do |action|
             puts "\n*** #{action} ***" if verbose?
             send(action)
             status = push!
@@ -19,9 +19,29 @@ module Deploy
 
         def queue(actions)
           if actions.is_a?(Array)
-            @@actions = @@actions + actions
+            self.class.actions = self.class.actions + actions
           else
-            @@actions << actions
+            self.class.actions << actions
+          end
+        end
+
+        def self.merge_actions
+          self.prepended_actions.each do |pa|
+            if pa.last.nil?
+              self.actions.insert(0,pa.first)
+            else
+              ind = self.actions.index(pa.last)
+              ind.nil? ? self.actions.insert(0, pa.first) : self.actions.insert(ind,pa.first)
+            end
+          end
+
+          self.appended_actions.each do |aa|
+            if aa.last.nil?
+              self.actions.insert(-1, aa.first)
+            else
+              ind = self.actions.index(aa.last)
+              ind.nil? ? self.actions.insert(-1, aa.first) : self.actions.insert(ind + 1,aa.first)
+            end
           end
         end
 

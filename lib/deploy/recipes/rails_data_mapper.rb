@@ -2,8 +2,6 @@ module Deploy
   module Recipes
     class RailsDataMapper < ::Deploy::Base
 
-      include ::Deploy::Common
-
       desc "setup_db", "Creates the database", true do
         remote "cd #{dep_config.get(:current_path)}"
         remote "bundle exec rake db:create RAILS_ENV=#{dep_config.get(:env)}"

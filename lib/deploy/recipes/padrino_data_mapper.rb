@@ -2,8 +2,6 @@ module Deploy
   module Recipes
     class PadrinoDataMapper < ::Deploy::Base
 
-      include ::Deploy::Common
-
       desc "setup_db", "Creates the database", true do
         remote "cd #{dep_config.get(:current_path)}"
         remote "bundle exec padrino rake dm:create -e #{dep_config.get(:env)}"

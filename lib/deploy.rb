@@ -28,8 +28,8 @@ require 'deploy/setup'
 
 require 'deploy/util'
 require 'deploy/remote_commands'
-require 'deploy/dsl'
 require 'deploy/process'
-require 'deploy/base'
-require 'deploy/common'
+require 'deploy/dsl'
+require 'deploy/common_methods'
+require 'deploy/recipes/base'
 
