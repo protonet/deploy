@@ -4,12 +4,12 @@ module Deploy
     def self.included(base)
       base.class_eval do
 
-        desc "setup", "create the directory structure needed for a deployment" do
+        desc "setup", "create the directory structure needed for a deployment", true do
           queue [:create_directories]
           process_queue
         end
 
-        desc "push_create", "Deploy the app to the server, and completely wipe the database tables and recreate them" do
+        desc "push_create", "Deploy the app to the server, and completely wipe the database tables and recreate them", true do
           queue [
             :set_prev_release_tag,
             :set_release_tag,
@@ -27,7 +27,7 @@ module Deploy
           process_queue
         end
 
-        desc "pull_create", "Deploy the app to the server, and completely wipe the database tables and recreate them" do
+        desc "pull_create", "Deploy the app to the server, and completely wipe the database tables and recreate them", true do
           queue [
             :set_prev_release_tag,
             :set_release_tag,
@@ -43,7 +43,7 @@ module Deploy
           process_queue
         end
 
-        desc "push_update", "Deploy the app to the server" do
+        desc "push_update", "Deploy the app to the server", true do
           queue [
             :set_prev_release_tag,
             :get_and_pack_code,
@@ -60,7 +60,7 @@ module Deploy
           process_queue
         end
 
-        desc "pull_update", "Deploy the app to the server" do
+        desc "pull_update", "Deploy the app to the server", true do
           queue [
             :set_prev_release_tag,
             :set_release_tag,
@@ -142,7 +142,7 @@ module Deploy
           remote "ln -s #{dep_config.get(:shared_path)}/tmp #{dep_config.get(:current_path)}/tmp"
         end
 
-        desc "bundle", "Runs bundle to make sure all the required gems are on the ststem" do
+        desc "bundle", "Runs bundle to make sure all the required gems are on the ststem", true do
           remote "rvm rvmrc trust #{dep_config.get(:current_path)}"
           remote "cd #{dep_config.get(:current_path)}"
           remote "bundle install --without test development --deployment"
@@ -160,7 +160,7 @@ module Deploy
             ]
         end
 
-        desc "restart", "Causes the server to restart for this app" do
+        desc "restart", "Causes the server to restart for this app", true do
           remote "touch #{dep_config.get(:current_path)}/tmp/restart.txt"
         end
 

@@ -8,15 +8,14 @@ options = {}
 
 # puts command.inspect
 
-if match_data = (/^(.+)\s(.+):(.+)/.match(command))
+if false #match_data = (/^(.+)\s(.+)/.match(command))
   options[:environment] = match_data[1]
-  options[:recipe]      = match_data[2]
-  options[:method]      = match_data[3]
+  options[:method]      = match_data[2]
   exit ::Deploy::Setup.init(options, '')
 else
   # Parse the options
   op = OptionParser.new do |opts|
-    opts.banner = "Usage: example.rb [options]"
+    opts.banner = "Usage: dep [options]"
     opts.on("-e", "--environment ENV", "Environment to execute in")               { |e| options[:environment] = e }
     opts.on("-m", "--method METHOD", "The method to run")                         { |m| options[:method]      = m }
     opts.on("-c", "--config CONFIG", "Path to custome config")                    { |c| options[:config]      = c }
@@ -26,7 +25,6 @@ else
     opts.on("-R", "--revert", "revert the deployment")                            { |r| options[:revert]      = r }
     opts.on("-l", "--list", "List all recipes")                                   { |l| options[:list]        = l }
     opts.on("-p", "--parameters PARAMS", "comma separated list of parameters")    { |p| options[:parameters]  = p }
-    opts.on("-g", "--generate OPTS", "generate recipe or config file    ")        { |g| options[:generate]    = g }
   end
   op.parse!
   exit ::Deploy::Setup.init(options, op.summarize)

@@ -12,21 +12,14 @@ module Deploy
 
       # Assign the parsed options to local variables
       list_recipes   = options[:list]
-      return recipe_list if list_recipes
-
-      support   = ::Deploy::Util
-      generator = ::Deploy::Generator
-
-      generate    = options[:generate]
-      return generator.generate(generate) if generate
+      return Deploy::Util.recipe_list if list_recipes
 
       show_methods   = options[:methods]
-      recipe         = options[:recipe] || options[:environment]
       should_revert  = options[:revert]
       method         = should_revert ? "revert" : options[:method]
       config_file    = options[:config]
 
-      support.set_parameters(options[:parameters])
+      Deploy::Util.set_parameters(options[:parameters])
 
       dep_config.set :env,     options[:environment]
       dep_config.set :dry_run, options[:dry]
@@ -37,13 +30,13 @@ module Deploy
       dep_config.set :app_name,    "test"
       dep_config.set :shell,       "/bin/bash"
 
-      support.config_environment
-      support.custom_config(config_file) if config_file
+      Deploy::Util.config_environment
+      Deploy::Util.custom_config(config_file) if config_file
 
       # Load the recipe
-      recipe_clazz = support.recipe_class(dep_config.get(:env))
+      recipe_clazz = Deploy::Util.recipe_class(dep_config.get(:env))
 
-      return support.methods_list(recipe_clazz) if show_methods
+      return Deploy::Util.methods_list(recipe_clazz) if show_methods
 
       recipe_clazz.new.send(method.to_sym) if recipe_clazz
       return 0
