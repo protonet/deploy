@@ -7,33 +7,33 @@ syntax
 
 What the options mean
 
-    -e --environment
+    -e | --environment
 Allows you to specify the environment, which can be used to write different recipes for different environments
 
-    -m --method
+    -m | --method
 The method within the recipe that you want to execute
 
-    -c --config
+    -c | --config
 You can specify a custom configuration file that is in a non standard location. They will be autoloaded if they have
 the same name as the environment and are placed under deploy/configs/
 
-    -d --dry
+    -d | --dry
 Dry run. Show what will be done, but do not actually execute any commands
 
-    -q --quiet
+    -q | --quiet
 By default everything is very verbose, if you wish to quiet the output you can specify this option
 
-    -M --methods
+    -M | --methods
 Displays all the methods that can be executed with the -m switch.
 
-    -R --revert
+    -R | --revert
 Allows you to revert to any previous release. Displays a list of all the archived releases and allows you to
 choose which to switch to
 
-    -l --list
+    -l | --list
 Lists all of the recipes availble for your project
 
-    -p --parameters
+    -p | --parameters
 Allows you to pass a comma separated list of key=value pairs to be used in the app
 E.g. "TEST1=test1,TEST2=test2"
 
