@@ -5,6 +5,7 @@ syntax
     dep -e|--environment -m|--method [-c|--config] [-d|--dry] [-q|--quiet] [-M|--methods] [-R|--revert] [-l|--list] [-p|--parameters]
 
 
+What the options mean
 
     -e --environment
 Allows you to specify the environment, which can be used to write different recipes for different environments
@@ -23,8 +24,7 @@ Dry run. Show what will be done, but do not actually execute any commands
 By default everything is very verbose, if you wish to quiet the output you can specify this option
 
     -M --methods
-Displays all the methods that can be executed with the -m switch. Must be used with -r as only the methods
-for that recipe will be displayed
+Displays all the methods that can be executed with the -m switch.
 
     -R --revert
 Allows you to revert to any previous release. Displays a list of all the archived releases and allows you to
@@ -39,11 +39,11 @@ E.g. "TEST1=test1,TEST2=test2"
 
 examples
 
-This will execute the "deploy" method in the recipe class speified within the recipe file under deploy/recipe/production.rb
+This will execute the "deploy" method in the recipe class speified within the recipe file under deploy/recipes/production.rb
 
     dep -e production -m deploy
 
-This will list the methods that are available to execute from recipe class speified within the recipe file under deploy/recipe/development.rb
+This will list the methods that are available to execute from recipe class speified within the recipe file under deploy/recipes/development.rb
 
     dep -e development -M
 
