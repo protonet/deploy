@@ -11,8 +11,8 @@ module Deploy
 
         def self.recipe(recipe); end
 
-        def self.desc(method_name, description, &block)
-          @@descriptions << [method_name, description]
+        def self.desc(method_name, description, public_scope = false, &block)
+          @@descriptions << [method_name, description] if public_scope
 
           define_method method_name.to_sym do
             self.instance_eval(&block)
