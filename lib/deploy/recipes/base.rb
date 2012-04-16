@@ -16,12 +16,14 @@ module Deploy
     cattr_accessor :actions,
       :prepended_actions,
       :appended_actions,
-      :descriptions
+      :descriptions,
+      :commands
 
     self.actions           ||= []
     self.prepended_actions ||= []
     self.appended_actions  ||= []
     self.descriptions      ||= []
+    self.commands          ||= []
 
     include ::Deploy::DSL
     include ::Deploy::Process

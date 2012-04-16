@@ -9,8 +9,8 @@ module Deploy
         def self.desc(method_name, description, public_scope = false, &block)
           self.descriptions << [method_name, description] if public_scope
 
-          define_method method_name.to_sym do
-            self.instance_eval(&block)
+          define_singleton_method method_name.to_sym do
+            class_eval(&block)
           end
         end
 

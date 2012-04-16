@@ -16,7 +16,7 @@ module Deploy
       require "#{APP_ROOT}/lib/deploy/recipes/#{recipe_name}.rb"
 
       recipe_clazz = eval("::Deploy::Recipes::#{camelize(recipe_name)}")
-      recipe_clazz.send :eval, load_environment_recipe_file(environment_recipe).join('')
+      recipe_clazz.class_eval load_environment_recipe_file(environment_recipe).join('')
       recipe_clazz
     end
 

@@ -38,7 +38,7 @@ module Deploy
 
       return Deploy::Util.methods_list(recipe_clazz) if show_methods
 
-      recipe_clazz.new.send(method.to_sym) if recipe_clazz
+      recipe_clazz.send(method.to_sym) if recipe_clazz
       return 0
     end
 
