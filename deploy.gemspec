@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.platform                    = Gem::Platform::RUBY
   s.authors                     = ["Philip MacIver", "Ali Jelveh"]
   s.email                       = ["philip@ivercore.com"]
-  s.homepage                    = "http://github.com/philly-mac/deploy"
+  s.homepage                    = "https://github.com/protonet/deploy"
   s.summary                     = %q{Deployment made more plain}
   s.description                 = %q{Deployment made more plain}
   s.date                        = Date.today.to_s
