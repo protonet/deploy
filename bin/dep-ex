@@ -5,16 +5,21 @@ log_file -noappend /tmp/deploy.log
 # never time out
 set timeout -1
 
-# This spawns the babushka protonet migration
-spawn ./dep
-
 # The script expects Password any number of times and answers with the correct password
+
+send_user "Passphrase?\ "
+expect_user -re "(.*)\n" {set PASSPHRASE $expect_out(1,string)}
+
+send `pwd`
+
+# This spawns the deploy
+spawn /home/philip/Projects/deploy/bin/dep
+
 expect {
-  -re "About to enable write access to .+ for admin users .+ is that OK\?" {
-    send "y\r"
+  -re "Enter passphrase for key" {
+    send "$PASSPHRASE\r"
     exp_continue
   }
-
 }
 
 # puts $expect_out(buffer)

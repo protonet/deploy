@@ -18,9 +18,6 @@ module Deploy
             :create_release_dir,
             :link,
             :unpack,
-            :bundle,
-            :setup_db,
-            :auto_migrate,
             :clean_up,
             :restart
           ]
@@ -34,9 +31,6 @@ module Deploy
             :create_release_dir,
             :link,
             :pull_code,
-            :bundle,
-            :setup_db,
-            :auto_migrate,
             :clean_up,
             :restart
           ]
@@ -52,8 +46,6 @@ module Deploy
             :create_release_dir,
             :link,
             :unpack,
-            :bundle,
-            :auto_upgrade,
             :clean_up,
             :restart
           ]
@@ -67,8 +59,6 @@ module Deploy
             :create_release_dir,
             :link,
             :pull_code,
-            :bundle,
-            #:auto_upgrade,
             :clean_up,
             :restart
           ]
