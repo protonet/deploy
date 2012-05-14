@@ -20,7 +20,9 @@ module Deploy
       end
 
       def bundle_cleanup
-        "unset RUBYOPT;unset GEM_HOME; unset GEM_PATH; unset BUNDLE_GEMFILE"
+        ruby_version = File.readlink("/usr/local/rvm/rubies/default").split("/").last
+        gem_path = "/usr/local/rvm/gems/#{ruby_version}"
+        "unset RUBYOPT;export GEM_HOME=#{gem_path}; export GEM_PATH=#{gem_path}; unset BUNDLE_GEMFILE"
       end
 
       def setup
