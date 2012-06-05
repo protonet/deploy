@@ -20,7 +20,7 @@ module Deploy
       end
 
       def bundle_cleanup
-        "unset RUBYOPT;unset GEM_HOME; unset GEM_PATH; unset BUNDLE_GEMFILE"
+        "unset RUBYOPT;unset GEM_HOME; unset GEM_PATH; unset BUNDLE_GEMFILE; . /usr/local/rvm/scripts/rvm; rvm use default;"
       end
 
       def setup

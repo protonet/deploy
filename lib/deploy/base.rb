@@ -16,7 +16,7 @@ module Deploy
 
     def run_now!(command)
       puts "EXECUTING: #{command}" if config.get(:verbose)
-      system command unless config.get(:dry_run)
+      system("bash -l -c '#{command}'") unless config.get(:dry_run)
     end
 
     def push!
