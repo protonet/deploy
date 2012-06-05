@@ -27,6 +27,7 @@ module Deploy
         self.class.actions = [
           :prepare_code,
           :bundle,
+          :npm_install,
           :setup_db,
           :link_current,
           :deploy_monit,
@@ -41,6 +42,7 @@ module Deploy
         self.class.actions = [
           :prepare_code,
           :bundle,
+          :npm_install,
           :migrate,
           # :copy_stage_config,
           :clean_up,
@@ -170,6 +172,16 @@ module Deploy
         FileUtils.cd latest_deploy
 
         run_now! "#{bundle_cleanup}; bundle install --path=#{release_dir} --without=test cucumber --local"
+      end
+      
+      def npm_install
+        shared_dir  = File.expand_path('node_modules', config.get(:shared_path))
+        release_dir = File.expand_path('node/node_modules', latest_deploy)
+
+        FileUtils.mkdir_p shared_dir
+        FileUtils.ln_s shared_dir, release_dir
+        
+        run_now! "cd #{latest_deploy}/node; export NODE_ENV='production'; npm install"
       end
 
       def migrate
