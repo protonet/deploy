@@ -31,7 +31,8 @@ module Deploy
         def run_actions(run_clazz)
           actions.each do |action|
             puts "\n*** #{action} ***" if Config.get(:verbose)
-            run_clazz.send action
+            exit_status = run_clazz.send(action)
+            raise "Failed to run action '#{action}'" unless exit_status
             run_clazz.push!
           end
         end

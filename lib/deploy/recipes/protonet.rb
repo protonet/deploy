@@ -95,7 +95,7 @@ module Deploy
         create_directory "#{config.get(:shared_path)}/externals/snapshots"
         create_directory "#{config.get(:shared_path)}/externals/image_proxy"
         create_directory "#{config.get(:shared_path)}/solr/data"
-        create_directory "#{config.get(:shared_path)}/user-files", 0770
+        create_directory "#{config.get(:shared_path)}/files", 0770
         create_directory "#{config.get(:shared_path)}/pids", 0770
         create_directory "#{config.get(:shared_path)}/avatars", 0770
       end
@@ -126,6 +126,7 @@ module Deploy
         create_directories
         get_code_and_unpack
         link_shared_directories
+        true
       end
 
       def get_code_and_unpack
@@ -160,6 +161,7 @@ module Deploy
             FileUtils.rm_rf "#{all_releases.delete_at(0)}"
           end
         end
+        true
       end
 
       def bundle
@@ -192,6 +194,7 @@ module Deploy
       def link_current
         FileUtils.rm_f config.get(:current_path)
         FileUtils.ln_s latest_deploy, config.get(:current_path)
+        true
       end
 
       # todo: one should be enough
@@ -205,15 +208,19 @@ module Deploy
       end
       
       def start_first_run_services
+        exit_status = false
         FileUtils.cd latest_deploy do
-          run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
+          exit_status = run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
         end
+        exit_status
       end
       
       def load_crontab
+        exit_status = false
         FileUtils.cd latest_deploy do
-          run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; script/init/cron update"
+          exit_status = run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; script/init/cron update"
         end
+        exit_status
       end
 
     end
