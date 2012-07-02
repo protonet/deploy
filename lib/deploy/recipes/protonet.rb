@@ -116,8 +116,13 @@ module Deploy
       def setup_db
         FileUtils.cd latest_deploy do
           db_exists = run_now!("mysql -u root #{config.get(:database_name)} -e 'show tables;' 2>&1 > /dev/null")
-          if !db_exists
-            puts "db not found, creating: #{ run_now!("#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rake db:setup") ? "success!" : "FAIL!"}"
+          if db_exists
+            puts "db already exists, please check your db contents, not recreating the db"
+            true
+          else
+            success = run_now!("#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rake db:setup")
+            puts "db not found, creating: #{ success ? "success!" : "FAIL!"}"
+            success
           end
         end
       end
