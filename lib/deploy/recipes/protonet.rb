@@ -74,6 +74,7 @@ module Deploy
         monit_command
         sleep 2
         monit_command "monitor all"
+        sleep 2
         monit_command "start all"
       end
 
