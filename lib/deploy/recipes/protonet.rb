@@ -215,11 +215,13 @@ module Deploy
       end
       
       def start_first_run_services
-        exit_status = false
+        exit_status1 = false
+        exit_status2 = false
         FileUtils.cd latest_deploy do
-          exit_status = run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
+          exit_status1 = run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
+          exit_status2 = run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rails runner \"SystemPublishToWeb.publish\""
         end
-        exit_status
+        exit_status1 && exit_status2
       end
       
       def load_crontab
