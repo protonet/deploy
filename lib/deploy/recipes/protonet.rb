@@ -17,6 +17,7 @@ module Deploy
       def monit_command(command = "")
         puts "\nrunning monit command #{command}"
         run_now! "/usr/sbin/monit -c #{config.get(:shared_path)}/config/monit_ptn_node -l #{config.get(:shared_path)}/log/monit.log -p #{config.get(:shared_path)}/pids/monit.pid #{command}"
+        sleep 2
       end
 
       def bundle_cleanup
@@ -48,9 +49,9 @@ module Deploy
           :clean_up,
           :link_current,
           :deploy_monit,
+          :load_crontab,
           :restart_services,
-          :restart_apache,
-          :load_crontab
+          :restart_apache
         ]
         self.class.run_actions(self)
       end
@@ -69,10 +70,8 @@ module Deploy
 
         # and restart monit
         monit_command "quit"
-        sleep 2
         # restarts it
         monit_command
-        sleep 2
         monit_command "monitor all"
         sleep 2
         monit_command "start all"
