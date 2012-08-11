@@ -109,6 +109,9 @@ module Deploy
           file_not_exists "#{local_repo}", [ "git clone #{server_repo} #{app_name}" ]
           remote "cd #{local_repo}"
           remote "git pull"
+          on_bad_exit "git co #{dep_config(:git_branch)}", [
+            "git checkout -t -b #{dep_config(:git_branch)} #{dep_config(:git_branch_origin)}/#{dep_config(:git_branch)}"
+          ]
           file_exists "#{local_repo}.zip", [ "rm #{local_repo}.zip" ]
           remote "git archive -o #{local_repo}.zip HEAD"
           remote "cd #{release_slot}"
