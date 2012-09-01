@@ -98,10 +98,10 @@ module Deploy
           remote "cd #{tmp_path}"
           file_not_exists "#{local_repo}", [ "git clone #{server_repo} #{app_name}" ]
           remote "cd #{local_repo}"
-          remote "git pull"
           on_bad_exit "git checkout #{dep_config.get(:git_branch)}", [
             "git checkout -t -b #{dep_config.get(:git_branch)} #{dep_config.get(:git_branch_origin)}/#{dep_config.get(:git_branch)}"
           ]
+          remote "git pull"
           file_exists "#{local_repo}.zip", [ "rm #{local_repo}.zip" ]
           remote "git archive -o #{local_repo}.zip HEAD"
           remote "cd #{release_slot}"
@@ -201,6 +201,7 @@ EOC
             puts "Rolling back to previous release #{dep_config.get(:release_tag)}"
             on_good_exit "ls -l | grep #{dep_config.get(:release_tag)} 2>&1 > /dev/null",[
               "rm #{dep_config.get(:current_path)}",
+              "rm -rf #{dep_config.get(:releases_path)}/#{dep_config.get(:release_tag)}",
               "ln -s #{dep_config.get(:releases_path)}/#{dep_config.get(:prev_release_tag)} #{dep_config.get(:current_path)}",
             ]
             bundle
