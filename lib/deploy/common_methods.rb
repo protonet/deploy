@@ -201,6 +201,7 @@ EOC
             puts "Rolling back to previous release #{dep_config.get(:release_tag)}"
             on_good_exit "ls -l | grep #{dep_config.get(:release_tag)} 2>&1 > /dev/null",[
               "rm #{dep_config.get(:current_path)}",
+              puts "\n *** deleting bad release #{dep_config.get(:releases_path)}/#{dep_config.get(:release_tag)} ***"
               "rm -rf #{dep_config.get(:releases_path)}/#{dep_config.get(:release_tag)}",
               "ln -s #{dep_config.get(:releases_path)}/#{dep_config.get(:prev_release_tag)} #{dep_config.get(:current_path)}",
             ]
