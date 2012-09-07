@@ -196,26 +196,11 @@ EOC
 
         desc "on_remote_failure", "What will happen if the remote deployment fails" do
           puts "\n*** remote_failure ***"
-          remote "cd #{dep_config.get(:app_root)}"
-          if dep_config.get(:prev_release_tag)
-            puts "Rolling back to previous release #{dep_config.get(:release_tag)}"
-            on_good_exit "ls -l | grep #{dep_config.get(:release_tag)} 2>&1 > /dev/null",[
-              "rm #{dep_config.get(:current_path)}",
-              "ln -s #{dep_config.get(:releases_path)}/#{dep_config.get(:prev_release_tag)} #{dep_config.get(:current_path)}",
-            ]
-
-            puts "\n *** deleting bad release #{dep_config.get(:releases_path)}/#{dep_config.get(:release_tag)} ***"
-            file_exists "#{dep_config.get(:releases_path)}/#{dep_config.get(:release_tag)}", [
-              "rm -rf #{dep_config.get(:releases_path)}/#{dep_config.get(:release_tag)}",
-            ]
-            bundle
-            push!
-            exit(1)
-          end
+          exit(1)
         end
 
         desc "on_local_failure", "What will happen if the local deployment fails" do
-          # Nothing to do here yet
+          puts "\n*** local_failure ***"
           exit(1)
         end
 
