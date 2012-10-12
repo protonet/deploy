@@ -196,7 +196,7 @@ module Deploy
 
       def precompile_assets
         FileUtils.cd latest_deploy + "/mobile"
-        run_now! "#{bundle_cleanup}; export COMPRESS_ASSETS='true'; bundle exec rake assets:precompile"
+        run_now! "#{bundle_cleanup}; export RACK_ENV='production'; bundle exec rake assets:precompile"
       end
       
       def npm_install
