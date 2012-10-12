@@ -31,8 +31,12 @@ module Deploy
           :npm_install,
           :setup_db,
           :link_current,
+          :bundle_mobile,
+          :precompile_assets,
           :deploy_monit,
           :restart_apache,
+          :bundle_mobile,
+          :precompile_assets,
           :start_first_run_services,
           :load_crontab
         ]
@@ -48,6 +52,9 @@ module Deploy
           # :copy_stage_config,
           :clean_up,
           :link_current,
+          :restart_app,
+          :bundle_mobile,
+          :precompile_assets,
           :deploy_monit,
           :load_crontab,
           :restart_services,
@@ -170,16 +177,26 @@ module Deploy
         true
       end
 
-      def bundle
-        shared_dir  = File.expand_path('bundle', config.get(:shared_path))
-        release_dir = File.expand_path('.bundle', latest_deploy)
+      def bundle_mobile
+        bundle(true)
+      end
 
-        FileUtils.mkdir_p shared_dir
-        FileUtils.ln_s shared_dir, release_dir
+      def bundle(mobile=false)
+        path_extension = mobile ? "/mobile" : ""
+        shared_bundle_path  = File.expand_path('bundle', config.get(:shared_path) + path_extension)
+        release_bundle_path = File.expand_path('.bundle', latest_deploy + path_extension)
 
-        FileUtils.cd latest_deploy
+        FileUtils.mkdir_p shared_bundle_path
+        FileUtils.ln_s shared_bundle_path, release_bundle_path
 
-        run_now! "#{bundle_cleanup}; bundle install --path=#{release_dir} --without=test cucumber --local"
+        FileUtils.cd latest_deploy + path_extension
+
+        run_now! "#{bundle_cleanup}; bundle install --path=#{release_bundle_path} --without=test cucumber --local"
+      end
+
+      def precompile_assets
+        FileUtils.cd latest_deploy + "/mobile"
+        run_now! "#{bundle_cleanup}; export COMPRESS_ASSETS='true'; bundle exec rake assets:precompile"
       end
       
       def npm_install
@@ -207,6 +224,10 @@ module Deploy
       def restart_apache
         FileUtils.touch "#{config.get(:current_path)}/tmp/restart.txt"
         monit_command "restart apache2"
+      end
+
+      def restart_app
+        run_now! "touch #{latest_deploy}/restart.txt"
       end
 
       def restart_services
