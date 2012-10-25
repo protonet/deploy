@@ -32,11 +32,9 @@ module Deploy
           :setup_db,
           :link_current,
           :bundle_mobile,
-          :precompile_assets,
           :deploy_monit,
           :restart_apache,
           :bundle_mobile,
-          :precompile_assets,
           :start_first_run_services,
           :load_crontab
         ]
@@ -54,7 +52,6 @@ module Deploy
           :link_current,
           :restart_app,
           :bundle_mobile,
-          :precompile_assets,
           :deploy_monit,
           :load_crontab,
           :restart_services,
