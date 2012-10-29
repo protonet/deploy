@@ -34,7 +34,6 @@ module Deploy
           :bundle_mobile,
           :deploy_monit,
           :restart_apache,
-          :bundle_mobile,
           :start_first_run_services,
           :load_crontab
         ]
