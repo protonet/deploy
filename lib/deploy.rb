@@ -32,6 +32,8 @@ require 'deploy/dsl'
 require 'deploy/common_methods'
 require 'deploy/base'
 
+require 'deploy/recipes/padrino_data_mapper'
+require 'deploy/recipes/protonet'
 require 'deploy/recipes/rails_active_record'
-
-
+require 'deploy/recipes/rails_data_mapper'
+require 'deploy/recipes/rails_sequel'
