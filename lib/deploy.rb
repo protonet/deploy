@@ -7,15 +7,15 @@ VIRTUAL_APP_ROOT = "#{File.expand_path(File.new(".").path)}" unless defined?(VIR
 $: << "#{APP_ROOT}/lib"
 
 def dep_config
-  Deploy::Config
+  SimpleConfig.for(:application)
 end
 
 def should_i_do_it?
-  dep_config.get(:env) != 'test' && !dep_config.get(:dry_run)
+  dep_config.env != 'test' && !dep_config.dry_run
 end
 
 def verbose?
-  dep_config.get(:verbose)
+  dep_config.verbose
 end
 
 require 'rubygems'

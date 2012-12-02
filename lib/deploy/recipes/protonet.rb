@@ -57,7 +57,7 @@ module Deploy
       def deploy_monit
         # variables for erb
         shared_path   = dep_config.get(:shared_path)
-        current_path  = dep_config.get(:current_path)
+        current_path  = dep_config.app_root
 
         File.open("#{dep_config.get(:shared_path)}/config/monit_ptn_node", 'w') do |f|
           f.write(ERB.new(IO.read("#{latest_deploy}/config/monit/monit_ptn_node.erb")).result(binding))
@@ -178,13 +178,13 @@ module Deploy
       end
 
       def link_current
-        FileUtils.rm_f dep_config.get(:current_path)
-        FileUtils.ln_s latest_deploy, dep_config.get(:current_path)
+        FileUtils.rm_f dep_config.app_root
+        FileUtils.ln_s latest_deploy, dep_config.app_root
       end
 
       # todo: one should be enough
       def restart_apache
-        FileUtils.touch "#{dep_config.get(:current_path)}/tmp/restart.txt"
+        FileUtils.touch "#{dep_config.app_root}/tmp/restart.txt"
         monit_command "restart apache2"
       end
 

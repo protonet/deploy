@@ -6,27 +6,19 @@ require "#{File.dirname(File.expand_path(__FILE__))}/../lib/deploy"
 command = ARGV.join(' ')
 options = {}
 
-# puts command.inspect
-
-if false #match_data = (/^(.+)\s(.+)/.match(command))
-  options[:environment] = match_data[1]
-  options[:method]      = match_data[2]
-  exit ::Deploy::Setup.init(options, '')
-else
-  # Parse the options
-  op = OptionParser.new do |opts|
-    opts.banner = "Usage: dep [options]"
-    opts.on("-e", "--environment ENV", "Environment to execute in")               { |e| options[:environment] = e }
-    opts.on("-m", "--method METHOD", "The method to run")                         { |m| options[:method]      = m }
-    opts.on("-c", "--config CONFIG", "Path to custome config")                    { |c| options[:config]      = c }
-    opts.on("-d", "--dry", "Just show the commands")                              { |d| options[:dry]         = d }
-    opts.on("-q", "--quiet", "Less noise")                                        { |q| options[:quiet]       = q }
-    opts.on("-M", "--methods", "Show methods")                                    { |m| options[:methods]     = m }
-    opts.on("-R", "--revert", "revert the deployment")                            { |r| options[:revert]      = r }
-    opts.on("-l", "--list", "List all recipes")                                   { |l| options[:list]        = l }
-    opts.on("-p", "--parameters PARAMS", "comma separated list of parameters")    { |p| options[:parameters]  = p }
-  end
-  op.parse!
-  exit ::Deploy::Setup.init(options, op.summarize)
+# Parse the options
+op = OptionParser.new do |opts|
+  opts.banner = "Usage: dep [options]"
+  opts.on("-e", "--environment ENV", "Environment to execute in")               { |e| options[:environment] = e }
+  opts.on("-m", "--method METHOD", "The method to run")                         { |m| options[:method]      = m }
+  opts.on("-c", "--config CONFIG", "Path to custom config")                     { |c| options[:config]      = c }
+  opts.on("-d", "--dry", "Just show the commands")                              { |d| options[:dry]         = d }
+  opts.on("-q", "--quiet", "Less noise")                                        { |q| options[:quiet]       = q }
+  opts.on("-M", "--methods", "Show methods")                                    { |m| options[:methods]     = m }
+  opts.on("-R", "--revert", "revert the deployment")                            { |r| options[:revert]      = r }
+  opts.on("-l", "--list", "List all recipes")                                   { |l| options[:list]        = l }
+  opts.on("-p", "--parameters PARAMS", "comma separated list of parameters")    { |p| options[:parameters]  = p }
 end
 
+op.parse!
+exit ::Deploy::Setup.init(options, op.summarize)

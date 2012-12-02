@@ -21,24 +21,23 @@ module Deploy
 
       Deploy::Util.set_parameters(options[:parameters])
 
-      dep_config.set :env,     options[:environment]
-      dep_config.set :dry_run, options[:dry]
-      dep_config.set :verbose, (dep_config.get(:dry_run) && dep_config.get(:env) != 'test') ? true : !options[:quiet]
+      dep_config.env      = options[:environment]
+      dep_config.dry_run  = options[:dry]
+      dep_config.verbose  = (dep_config.dry_run && dep_config.env != 'test') ? true : !options[:quiet]
 
       # Set the configuration options
-      dep_config.set :deploy_root, "/var/www"
-      dep_config.set :app_name,    "test"
-      dep_config.set :shell,       "/bin/bash"
+      dep_config.deploy_root = "/var/www"
+      dep_config.app_name    = "test"
+      dep_config.shell       = "/bin/bash"
+      dep_config.app_root    = "#{dep_config.deploy_root}/#{dep_config.app_name}"
 
       Deploy::Util.config_environment
       Deploy::Util.custom_config(config_file) if config_file
 
-      # Load the recipe
-      recipe_clazz = Deploy::Util.recipe_class(dep_config.get(:env))
+      require "#{VIRTUAL_ROOT}/config/deploy.recipes.rb"
+      return Deploy::Util.methods_list(DeployRecipes) if show_methods
 
-      return Deploy::Util.methods_list(recipe_clazz) if show_methods
-
-      recipe_clazz.send(method.to_sym) if recipe_clazz
+      DeployRecipes.send(method.to_sym)
       return 0
     end
 

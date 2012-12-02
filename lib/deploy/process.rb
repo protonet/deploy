@@ -10,8 +10,6 @@ module Deploy
             puts "\n*** #{action} ***" if verbose?
             send(action)
             status = push!
-            send(:on_local_failure)  if should_i_do_it? && dep_config.get(:local_status)  == false
-            send(:on_remote_failure) if should_i_do_it? && dep_config.get(:remote_status) == false
           end
           self.actions = []
         end
@@ -54,10 +52,10 @@ module Deploy
 
         def self.ssh_cmd(commands)
           cmd = "ssh "
-          cmd << "#{dep_config.get(:extra_ssh_options)} " if dep_config.get(:extra_ssh_options)
-          cmd << "#{dep_config.get(:username)}@#{dep_config.get(:remote)} "
+          cmd << "#{dep_config.extra_ssh_options)} " if dep_config.extra_ssh_options
+          cmd << "#{dep_config.username}@#{dep_config.remote} "
           cmd << "'"
-          cmd << "#{dep_config.get(:after_login)}; " if dep_config.get(:after_login)
+          cmd << "#{dep_config.after_login)}; " if dep_config.after_login
           cmd << "#{commands}"
           cmd << "'"
         end
@@ -88,8 +86,8 @@ module Deploy
               end
             end
 
-            dep_config.set(:local_status,  run_now!(local_commands.join("; ")))           unless local_commands.empty?
-            dep_config.set(:remote_status, run_now!(ssh_cmd(remote_commands.join("; ")))) unless remote_commands.empty?
+            run_now!(local_commands.join("; "))           unless local_commands.empty?
+            run_now!(ssh_cmd(remote_commands.join("; "))) unless remote_commands.empty?
 
             puts "\n" if should_i_do_it?
             self.commands = []

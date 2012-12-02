@@ -1,6 +1,6 @@
 module Deploy
   module Recipes
-    class RailsDataMapper < ::Deploy::Base
+    class RailsActiveRecord < ::Deploy::Base
 
       desc "setup_db", "Creates the database", true do
         remote "cd #{dep_config.app_root}"
