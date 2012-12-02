@@ -7,7 +7,7 @@ VIRTUAL_APP_ROOT = "#{File.expand_path(File.new(".").path)}" unless defined?(VIR
 $: << "#{APP_ROOT}/lib"
 
 def dep_config
-  SimpleConfig.for(:application)
+  SimpleConfig.for(:deploy)
 end
 
 def should_i_do_it?
