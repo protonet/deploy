@@ -26,10 +26,6 @@ By default everything is very verbose, if you wish to quiet the output you can s
     -M | --methods
 Displays all the methods that can be executed with the -m switch.
 
-    -R | --revert
-Allows you to revert to any previous release. Displays a list of all the archived releases and allows you to
-choose which to switch to
-
     -l | --list
 Lists all of the recipes availble for your project
 
@@ -50,54 +46,3 @@ This will list the methods that are available to execute from recipe class speif
 This will show what will happen when the deploy method is executed, but will not actually do anything
 
     dep -e production -m deploy -d
-
-Extending a Recipe
-
-Because you might want to use an existing recipe but just add some functality to it, here is an short example how to do it.
-
-In your app create the directories
-
-    deploy/recipes
-
-Within here create a file for the environment
-
-    production.rb
-
-within the file you will need to specify the recipe you want to extend.
-Then you will need to create, or override the method you want and add the method to the list of actions to be executed
-
-    recipe :rails_data_mapper
-
-    append  :my_task_one
-    prepend :my_task_two, :my_task_one
-
-
-    # The true parameter marks the method as being one that is listed with the -M option
-    # And also tells people that this is a method that you want to be public, and you don't
-    # really want other not marked as public being used be themselves
-    desc "do_my_tasks", "runs others tasks", true do
-      queue [:my_task_one, :my_task_two]
-      queue :my_task_one
-      process_queue
-    end
-
-    desc "my_task_one", "explation of what my task does" do
-      # code...
-    end
-
-    desc "my_task_two", "explation of what my task does" do
-      # code...
-    end
-
-
-Then you should just be able to call dep as normal passing in do_my_tasks as the method (-m)
-You could also just call the tasks themselves (-m my_task_one). But the do_my_tasks method shows how you can execute a batch
-of methods in one go. You can queue an array of tasks or individual tasks
-
-The append and prepend methods will either add the action to the front or end of the queue of actions to be executed,
-or if you supply an optional second option of an action name, the action will put put in front or behind that action in the queue.
-
-TODO
-====
-
-describe the standard recipes
