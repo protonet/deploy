@@ -2,7 +2,7 @@ Very simple tool to do deployments.
 
 syntax
 
-    dep -e|--environment -m|--method [-c|--config] [-d|--dry] [-q|--quiet] [-M|--methods] [-R|--revert] [-l|--list] [-p|--parameters]
+    dep -e|--environment -m|--method [-c|--config] [-d|--dry] [-q|--quiet] [-M|--methods] [-l|--list] [-p|--parameters]
 
 
 What the options mean
