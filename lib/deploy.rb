@@ -19,11 +19,10 @@ def verbose?
 end
 
 require 'rubygems'
-#require 'bundler/setup'
 
 require 'optparse'
+require 'simple_config'
 
-require 'deploy/config'
 require 'deploy/setup'
 
 require 'deploy/util'
@@ -31,5 +30,8 @@ require 'deploy/remote_commands'
 require 'deploy/process'
 require 'deploy/dsl'
 require 'deploy/common_methods'
-require 'deploy/recipes/base'
+require 'deploy/base'
+
+require 'deploy/recipes/rails_active_record'
+
 

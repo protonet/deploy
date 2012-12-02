@@ -3,10 +3,10 @@ require "#{File.dirname(File.expand_path(__FILE__))}/spec_helper"
 describe "All Recipes" do
 
   before do
-    ::Deploy::Config.set :verbose,     false
-    ::Deploy::Config.set :deploy_root, "/var/www"
-    ::Deploy::Config.set :app_name,    "test"
-    ::Deploy::Config.set :shell,       "/bin/bash"
+    dep_config.set :verbose,     false
+    dep_config.set :deploy_root, "/var/www"
+    dep_config.set :app_name,    "test"
+    dep_config.set :shell,       "/bin/bash"
 
     @options = {
       :environment => 'test',
@@ -35,8 +35,8 @@ describe "All Recipes" do
         @options[:method] = recipe_method
         @options[:parameters] = "TEST1=test1,TEST2=test2"
         ::Deploy::Setup.init(@options, "")
-        ::Deploy::Config.get("TEST1").should == "test1"
-        ::Deploy::Config.get("TEST2").should == "test2"
+        dep_config.TEST1.should == "test1"
+        dep_config.TEST2.should == "test2"
       end
     end
   end

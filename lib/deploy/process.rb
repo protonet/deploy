@@ -52,10 +52,10 @@ module Deploy
 
         def self.ssh_cmd(commands)
           cmd = "ssh "
-          cmd << "#{dep_config.extra_ssh_options)} " if dep_config.extra_ssh_options
+          cmd << "#{dep_config.extra_ssh_options} " if dep_config.exists?(:extra_ssh_options) && dep_config.extra_ssh_options
           cmd << "#{dep_config.username}@#{dep_config.remote} "
           cmd << "'"
-          cmd << "#{dep_config.after_login)}; " if dep_config.after_login
+          cmd << "#{dep_config.after_login}; " if dep_config.exists?(:after_login) && dep_config.after_login
           cmd << "#{commands}"
           cmd << "'"
         end

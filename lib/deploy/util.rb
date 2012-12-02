@@ -2,7 +2,7 @@ module Deploy
   class Util
 
     def self.config_environment
-      load_config("#{VIRTUAL_APP_ROOT}/config/deploy.config.rb")
+      load_config("#{VIRTUAL_APP_ROOT}/config/deploy_config.rb")
     end
 
     def self.custom_config(file)
@@ -13,7 +13,7 @@ module Deploy
       if File.exists?(file)
         require file
         DeployConfig.send(dep_config.env)
-        dep_config.app_root    = "#{dep_config.deploy_root}/#{dep_config.app_name}"
+        dep_config.set :app_root, "#{dep_config.deploy_root}/#{dep_config.app_name}"
       end
     end
 

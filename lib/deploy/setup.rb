@@ -15,26 +15,25 @@ module Deploy
       return Deploy::Util.recipe_list if list_recipes
 
       show_methods   = options[:methods]
-      should_revert  = options[:revert]
-      method         = should_revert ? "revert" : options[:method]
+      method         = options[:method]
       config_file    = options[:config]
 
       Deploy::Util.set_parameters(options[:parameters])
 
-      dep_config.env      = options[:environment]
-      dep_config.dry_run  = options[:dry]
-      dep_config.verbose  = (dep_config.dry_run && dep_config.env != 'test') ? true : !options[:quiet]
+      dep_config.set :env,     options[:environment]
+      dep_config.set :dry_run, options[:dry]
+      dep_config.set :verbose, (dep_config.dry_run && dep_config.env != 'test') ? true : !options[:quiet]
 
       # Set the configuration options
-      dep_config.deploy_root = "/var/www"
-      dep_config.app_name    = "test"
-      dep_config.shell       = "/bin/bash"
-      dep_config.app_root    = "#{dep_config.deploy_root}/#{dep_config.app_name}"
+      dep_config.set :deploy_root, "/var/www"
+      dep_config.set :app_name,    "test"
+      dep_config.set :shell,       "/bin/bash"
+      dep_config.set :app_root,    "#{dep_config.deploy_root}/#{dep_config.app_name}"
 
       Deploy::Util.config_environment
       Deploy::Util.custom_config(config_file) if config_file
 
-      require "#{VIRTUAL_ROOT}/config/deploy.recipes.rb"
+      require "#{VIRTUAL_APP_ROOT}/config/deploy_recipes.rb"
       return Deploy::Util.methods_list(DeployRecipes) if show_methods
 
       DeployRecipes.send(method.to_sym)
