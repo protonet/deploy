@@ -28,7 +28,7 @@ module Deploy
     def self.methods_list(recipe_clazz)
       if recipe_clazz
         recipe_clazz.all_descriptions.each do |description|
-          puts "#{spacing(description.first, 40)}#{description.last}"
+          puts "#{recipe_clazz}:  #{spacing(description.first, 40)}#{description.last}"
         end
       end
       return 0
@@ -70,8 +70,11 @@ module Deploy
     end
 
     def self.spacing(word, spaces)
-      spaces_num = spaces - word.to_s.size
-      spaces_num.times{ word.to_s << ' '}
+      word       = word.to_s
+      spaces_num = spaces - word.size
+
+      spaces_num.times{ word << ' '}
+
       word
     end
 
