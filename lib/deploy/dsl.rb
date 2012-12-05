@@ -7,7 +7,14 @@ module Deploy
         def self.recipe(recipe); end
 
         def self.desc(method_name, description, public_scope = true, &block)
-          self.descriptions << [method_name, description] if public_scope
+          if public_scope
+            method_name = method_name.to_s
+
+            duplicates = self.descriptions.each_with_index{|description, i| description.first == method_name ? i : nil }.compact
+            duplicates.each{|i| self.descriptions.delete_at(i) }
+
+            self.descriptions << [method_name.to_s, description]
+          end
 
           define_singleton_method method_name.to_sym do
             class_eval(&block)
