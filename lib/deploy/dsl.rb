@@ -15,7 +15,7 @@ module Deploy
         end
 
         def self.all_descriptions
-          self.descriptions.sort{|a,b| a.to_a.first <=> b.to_a.first}
+          self.descriptions.sort{|a,b| a.to_s.first <=> b.to_s.first}
         end
 
         def self.prepend(action, prepend_before = nil)
