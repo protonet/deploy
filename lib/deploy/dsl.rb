@@ -10,7 +10,13 @@ module Deploy
           if public_scope
             method_name = method_name.to_s
 
-            duplicates = self.descriptions.each_with_index{|description, i| description.first == method_name ? i : nil }.compact
+            i = 0
+            duplicates = self.descriptions.map do |key, value|
+              ret = key == method_name ? i : nil
+              i += 1
+              ret
+            end.compact
+
             duplicates.each{|i| self.descriptions.delete_at(i) }
 
             self.descriptions << [method_name.to_s, description]
