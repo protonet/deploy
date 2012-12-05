@@ -6,7 +6,7 @@ module Deploy
 
         def self.recipe(recipe); end
 
-        def self.desc(method_name, description, public_scope = false, &block)
+        def self.desc(method_name, description, public_scope = true, &block)
           self.descriptions << [method_name, description] if public_scope
 
           define_singleton_method method_name.to_sym do

@@ -17,6 +17,11 @@ module Deploy
         remote "bundle exec rake db:automigrate RAILS_ENV=#{dep_config.env}"
       end
 
+      def self.rake(command)
+        remote "cd #{dep_config.app_root}"
+        remote "RAILS_ENV=#{dep_config.env} rake #{command}"
+      end
+
     end
   end
 end

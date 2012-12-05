@@ -41,6 +41,7 @@ module Deploy
           commands = commands.join(" && ")
           remote "if [[ $? -ne 0 ]]; then #{commands}; fi"
         end
+
       end
     end
   end

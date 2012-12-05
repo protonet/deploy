@@ -4,12 +4,12 @@ module Deploy
     def self.included(base)
       base.class_eval do
 
-        desc "setup", "create the directory structure needed for a deployment", true do
+        desc :setup, "create the directory structure needed for a deployment" do
           queue [:create_directories]
           process_queue
         end
 
-        desc "deploy", "Deploy the app to the server", true do
+        desc :deploy, "Deploy the app to the server" do
           queue [
             :pull_code,
             :restart
@@ -17,12 +17,12 @@ module Deploy
           process_queue
         end
 
-        desc "create_directories", "create the directory structure" do
+        desc :create_directories, "create the directory structure" do
           mkdir "#{dep_config.app_root}/tmp"
           mkdir "#{dep_config.app_root}/log"
         end
 
-        desc "pull_code", "Pulls the code from the git repo" do
+        desc :pull_code, "Pulls the code from the git repo" do
           remote "cd #{dep_config.app_root}"
 
           if dep_config.exists?(:git_branch)
@@ -34,12 +34,12 @@ module Deploy
           remote "git pull"
         end
 
-        desc "bundle", "Runs bundle to make sure all the required gems are on the ststem", true do
+        desc :bundle, "Runs bundle to make sure all the required gems are on the ststem" do
           remote "cd #{dep_config.app_root}"
           remote "bundle install --without test development --deployment"
         end
 
-        desc "restart", "Causes the server to restart for this app", true do
+        desc :restart, "Causes the server to restart for this app" do
           remote "touch #{dep_config.app_root}/tmp/restart.txt"
         end
 
