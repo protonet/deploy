@@ -31,6 +31,7 @@ module Deploy
             ]
           end
 
+          remote "git checkout ."
           remote "git pull"
         end
 
