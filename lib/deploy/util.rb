@@ -70,8 +70,8 @@ module Deploy
     end
 
     def self.spacing(word, spaces)
-      spaces_num = spaces - word.size
-      spaces_num.times{ word << ' '}
+      spaces_num = spaces - word.to_s.size
+      spaces_num.times{ word.to_s << ' '}
       word
     end
 
