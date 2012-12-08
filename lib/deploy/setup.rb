@@ -37,6 +37,11 @@ module Deploy
       return Deploy::Util.methods_list(DeployRecipes) if show_methods
 
       DeployRecipes.send(method.to_sym)
+
+      unless DeployRecipes.commands.empty?
+        DeployRecipes.push!
+      end
+
       return 0
     end
 

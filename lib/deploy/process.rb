@@ -9,7 +9,7 @@ module Deploy
           self.actions.each do |action|
             puts "\n*** #{action} ***" if verbose?
             send(action)
-            status = push!
+            push!
           end
           self.actions = []
         end
@@ -70,7 +70,7 @@ module Deploy
           `#{command}` if should_i_do_it?
         end
 
-        def self.push!(push_now = false)
+        def self.push!
           unless self.commands.empty?
             local_commands  = []
             remote_commands = []

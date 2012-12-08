@@ -2,19 +2,21 @@ module Deploy
   module Recipes
     class RailsDataMapper < ::Deploy::Base
 
-      desc "setup_db", "Creates the database", true do
+      include ::Deploy::Recipes::CommonMethods
+
+      desc :setup_db, "Creates the database" do
         remote "cd #{dep_config.app_root}"
-        remote "bundle exec rake db:create RAILS_ENV=#{dep_config.env}"
+        remote "RAILS_ENV=#{dep_config.env} bundle exec rake db:create"
       end
 
-      desc "auto_upgrade", "Trys to migrate the database to the current state. Won't destroy any data", true do
+      desc :auto_upgrade, "Trys to migrate the database to the current state. Won't destroy any data" do
         remote "cd #{dep_config.app_root}"
-        remote "bundle exec rake db:autoupgrade RAILS_ENV=#{dep_config.env}"
+        remote "RAILS_ENV=#{dep_config.env} bundle exec rake db:autoupgrade"
       end
 
-      desc "auto_migrate", "Migrates the database to the current state. This will completely destroy the data that is there", true do
+      desc :auto_migrate, "Migrates the database to the current state. This will completely destroy the data that is there" do
         remote "cd #{dep_config.app_root}"
-        remote "bundle exec rake db:automigrate RAILS_ENV=#{dep_config.env}"
+        remote "RAILS_ENV=#{dep_config.env} bundle exec rake db:automigrate"
       end
 
     end

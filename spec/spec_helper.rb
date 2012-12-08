@@ -14,18 +14,15 @@ class Bacon::Context
 
   def common_methods
     [
-      :setup,
-      :deploy,
+      :create_directories,
       :setup_db,
-      :auto_migrate,
-      :auto_upgrade,
-      :restart,
+      :bundle,
     ]
   end
 
   def recipes
     {
-      :rails_active_record => common_methods
+      :rails_common_methods => common_methods
     }
   end
 

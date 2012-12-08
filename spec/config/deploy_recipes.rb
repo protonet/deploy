@@ -1,4 +1,4 @@
-class DeployRecipes < Deploy::Recipes::RailsActiveRecord
+class DeployRecipes < Deploy::Recipes::RailsCommonMethods
 
   def self.test
   end

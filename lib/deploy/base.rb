@@ -28,8 +28,6 @@ module Deploy
     include ::Deploy::DSL
     include ::Deploy::Process
     include ::Deploy::RemoteCommands
-    include ::Deploy::CommonMethods
-
   end
 end
 
