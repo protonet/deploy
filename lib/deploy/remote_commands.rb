@@ -36,10 +36,18 @@ module Deploy
           remote "if [[ $? = 0 ]]; then #{commands}; fi"
         end
 
+        def self.if_success(test, commands)
+          on_good_exit(test, commands)
+        end
+
         def self.on_bad_exit(test, commands)
           remote test
           commands = commands.join(" && ")
           remote "if [[ $? -ne 0 ]]; then #{commands}; fi"
+        end
+
+        def self.if_fail(test, commands)
+          on_bad_exit(test, commands)
         end
 
       end
