@@ -19,7 +19,7 @@ module Deploy
             cmd << "--without test development"
             cmd << "--deployment"
 
-            if dep_config.exists?(:bundle_bin_stubs) && dep_config.bundle_bin_stubs
+            if dep_config.exists?(:bundle_binstubs) && dep_config.bundle_binstubs
               cmd << "--binstubs"
             end
 
