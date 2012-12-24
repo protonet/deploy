@@ -5,19 +5,19 @@ module Deploy
       def self.included(base)
         base.class_eval do
 
-          desc :unicorn_start, "Start unicorn" do
+          task :unicorn_start, "Start unicorn" do
             remote "sudo /etc/init.d/#{dep_config.unicorn_script} start"
           end
 
-          desc :unicorn_stop, "Stop unicorn" do
+          task :unicorn_stop, "Stop unicorn" do
             remote "sudo /etc/init.d/#{dep_config.unicorn_script} stop"
           end
 
-          desc :unicorn_restart, "Restart unicorn" do
+          task :unicorn_restart, "Restart unicorn" do
             remote "sudo /etc/init.d/#{dep_config.unicorn_script} restart"
           end
 
-          desc :unicorn_upgrade, "Reload code and restart workers" do
+          task :unicorn_upgrade, "Reload code and restart workers" do
             remote "sudo /etc/init.d/#{dep_config.unicorn_script} upgrade"
           end
 
@@ -34,12 +34,12 @@ module Deploy
             end
           end
 
-          desc :unicorn_setup_config, "Setup unicorn config for nginx and as an init file" do
+          task :unicorn_setup_config, "Setup unicorn config for nginx and as an init file" do
             sudo "ln -nfs #{dep_config.app_root}/config/deploy/nginx/unicorn_nginx_#{dep_config.composite_name} /etc/nginx/sites-enabled/"
             sudo "ln -nfs #{dep_config.app_root}/config/deploy/unicorn/unicorn_init_#{dep_config.composite_name} /etc/init.d/"
           end
 
-          desc :create_config_nginx, "Create nginx conf file" do
+          task :create_config_nginx, "Create nginx conf file" do
             require_params(:server_name)
 
             template = "#{APP_ROOT}/lib/deploy/templates/nginx/unicorn_nginx.erb"
@@ -53,7 +53,7 @@ module Deploy
             create_conf_file(template, filename, options)
           end
 
-          desc :create_config_unicorn, "Create unicorn conf file" do
+          task :create_config_unicorn, "Create unicorn conf file" do
             template = "#{APP_ROOT}/lib/deploy/templates/unicorn/unicorn_conf.erb"
             filename = "#{VIRTUAL_APP_ROOT}/config/deploy/unicorn/unicorn_conf_#{dep_config.composite_name}.rb"
 
@@ -65,7 +65,7 @@ module Deploy
             create_conf_file(template, filename, options)
           end
 
-          desc :create_config_unicorn_init, "Create init script file" do
+          task :create_config_unicorn_init, "Create init script file" do
             template = "#{APP_ROOT}/lib/deploy/templates/unicorn/unicorn_init.erb"
             filename = "#{VIRTUAL_APP_ROOT}/config/deploy/unicorn/unicorn_init_#{composite_name}"
 

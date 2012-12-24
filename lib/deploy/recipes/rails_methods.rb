@@ -14,12 +14,12 @@ module Deploy
             remote cmd.join(' ')
           end
 
-          desc :create_directories, "create the directory structure" do
+          task :create_directories, "create the directory structure" do
             mkdir "#{dep_config.app_root}/tmp"
             mkdir "#{dep_config.app_root}/log"
           end
 
-          desc :bundle, "Runs bundle to make sure all the required gems are on the ststem" do
+          task :bundle, "Runs bundle to make sure all the required gems are on the ststem" do
             remote "cd #{dep_config.app_root}"
 
             cmd = []
@@ -35,27 +35,27 @@ module Deploy
             remote cmd.join(' ')
           end
 
-          desc :precompile_assets, "Compile the assets" do
+          task :precompile_assets, "Compile the assets" do
             rake 'assets:precompile'
           end
 
-          desc :migrate_db, "Migrate the database" do
+          task :migrate_db, "Migrate the database" do
             rake 'db:migrate'
           end
 
-          desc :create_db, "Create the database for this environment" do
+          task :create_db, "Create the database for this environment" do
             rake 'db:create'
           end
 
-          desc :load_schema, "Load the schema from the schema file" do
+          task :load_schema, "Load the schema from the schema file" do
             rake 'db:schema:load'
           end
 
-          desc :remove_tmp_cache, "Removes the temp cache" do
+          task :remove_tmp_cache, "Removes the temp cache" do
             remote "sudo rm -rf  #{dep_config.app_root}/tmp/cache"
           end
 
-          desc :remove_assets, "Removes the assets" do
+          task :remove_assets, "Removes the assets" do
             remote "sudo rm -rf  #{dep_config.app_root}/public/assets/*"
           end
 

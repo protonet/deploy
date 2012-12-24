@@ -4,9 +4,7 @@ module Deploy
     def self.included(base)
       base.class_eval do
 
-        def self.recipe(recipe); end
-
-        def self.desc(method_name, description, public_scope = true, &block)
+        def self.task(method_name, description, public_scope = true, &block)
           if public_scope
             method_name = method_name.to_s
 

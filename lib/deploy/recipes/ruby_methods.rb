@@ -5,7 +5,7 @@ module Deploy
       def self.included(base)
         base.class_eval do
 
-          desc :rake, 'Run a command via rake' do
+          task :rake, 'Run a command via rake' do
             cmd = []
             cmd << "cd #{dep_config.app_root}"
             cmd << "bundle exec" if present?(:use_bundler)

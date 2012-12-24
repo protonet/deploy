@@ -5,7 +5,7 @@ module Deploy
       def self.included(base)
         base.class_eval do
 
-          desc :nginx_restart, "Restart nginx" do
+          task :nginx_restart, "Restart nginx" do
             remote "sudo /etc/init.d/nginx restart"
           end
 

@@ -5,12 +5,12 @@ module Deploy
       def self.included(base)
         base.class_eval do
 
-          desc :create_directories, "create the directory structure" do
+          task :create_directories, "create the directory structure" do
             mkdir "#{dep_config.app_root}/tmp"
             mkdir "#{dep_config.app_root}/log"
           end
 
-          desc :pull_code, "Pulls the code from the git repo" do
+          task :pull_code, "Pulls the code from the git repo" do
             remote "cd #{dep_config.app_root}"
 
             if dep_config.exists?(:git_branch)
@@ -23,7 +23,7 @@ module Deploy
             remote "git pull"
           end
 
-          desc :clone_code, "Clone the repo" do
+          task :clone_code, "Clone the repo" do
             remote "cd #{dep_config.deploy_root}"
 
             if dep_config.exists?(:git_branch)
@@ -33,7 +33,7 @@ module Deploy
             end
           end
 
-          desc :merge_branch, "Merge one branch into another" do
+          task :merge_branch, "Merge one branch into another" do
             from_branch, to_branch = require_params(:git_from_branch, :git_to_branch)
 
             starting_branch = `git rev-parse --abbrev-ref HEAD`.strip
@@ -48,7 +48,7 @@ module Deploy
             local "git checkout #{starting_branch}"
           end
 
-          desc :tag_and_release, 'Makes a tag from the current staging branch' do
+          task :tag_and_release, 'Makes a tag from the current staging branch' do
             from_branch = require_params(:git_from_branch)
 
             starting_branch = `git rev-parse --abbrev-ref HEAD`.strip
