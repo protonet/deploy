@@ -1,6 +1,6 @@
 module Deploy
-  module Recipes
-    module RubyMethods
+  module Methods
+    module Ruby
 
       def self.included(base)
         base.class_eval do

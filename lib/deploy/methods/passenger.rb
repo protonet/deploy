@@ -1,6 +1,6 @@
 module Deploy
-  module Recipes
-    module PassengerMethods
+  module Methods
+    module Passenger
 
       def self.included(base)
         base.class_eval do

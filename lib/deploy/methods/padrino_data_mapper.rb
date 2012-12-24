@@ -1,5 +1,5 @@
 module Deploy
-  module Recipes
+  module Methods
     module PadrinoDataMapper
 
       def self.included(base)

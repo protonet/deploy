@@ -1,6 +1,6 @@
 module Deploy
-  module Recipes
-    module NginxMethods
+  module Methods
+    module Nginx
 
       def self.included(base)
         base.class_eval do

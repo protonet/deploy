@@ -1,6 +1,6 @@
 module Deploy
-  module Recipes
-    module GitMethods
+  module Methods
+    module Git
 
       def self.included(base)
         base.class_eval do
@@ -55,7 +55,7 @@ module Deploy
 
             cmd = []
             cmd << "git checkout #{from_branch}" if starting_branch != from_branch
-            cmd << "git tag release-#{Time.now.utc.strftime('%Y%m%d%H%M%S')}"
+            cmd << "git tag -a release-#{Time.now.utc.strftime('%Y%m%d%H%M%S')} -m"
             cmd << "git push"
             cmd << "git push --tags"
 
@@ -64,6 +64,11 @@ module Deploy
             local "git checkout #{starting_branch}"
           end
 
+          task :checkout_tag, 'Deploys to the environment using a tag' do
+            raise "No tag specified" unless ENV['GIT_TAG']
+            remote 'git fetch'
+            remote "git checkout #{ENV['GIT_TAG']}"
+          end
         end
       end
 

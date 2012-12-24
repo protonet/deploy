@@ -2,7 +2,7 @@ require 'fileutils'
 require 'erb'
 
 module Deploy
-  module Recipes
+  module Methods
     class Protonet
 
       include ::Deploy::Process

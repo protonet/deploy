@@ -1,6 +1,6 @@
 module Deploy
-  module Recipes
-    module RailsMethods
+  module Methods
+    module Rails
 
       def self.included(base)
         base.class_eval do

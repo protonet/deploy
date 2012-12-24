@@ -1,6 +1,6 @@
 module Deploy
-  module Recipes
-    module UnicornMethods
+  module Methods
+    module Unicorn
 
       def self.included(base)
         base.class_eval do

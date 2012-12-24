@@ -1,6 +1,6 @@
 module Deploy
-  module Recipes
-    class RailsDataMapperMethods
+  module Methods
+    class RailsDataMapper
 
       def self.included(base)
         base.class_eval do

@@ -1,10 +1,9 @@
 class DeployRecipes < Deploy::Base
 
-  include ::Deploy::Recipes::RailsMethods
-  include ::Deploy::Recipes::GitMethods
-  include ::Deploy::Recipes::NginxMethods
-  include ::Deploy::Recipes::UnicornMethods
-
+  include ::Deploy::Methods::Rails
+  include ::Deploy::Methods::Git
+  include ::Deploy::Methods::Nginx
+  include ::Deploy::Methods::Unicorn
 
   def self.test
   end
