@@ -14,7 +14,7 @@ module Deploy
         require file
 
         DeployConfig.common
-        DeployConfig.send(dep_config.env)
+        DeployConfig.send(dep_config.env) if dep_config.exists?(:env)
 
         dep_config.set :app_root,       "#{dep_config.deploy_root}/#{dep_config.app_name}"
         dep_config.set :composite_name, "#{dep_config.app_name}-#{dep_config.env}"
