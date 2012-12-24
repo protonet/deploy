@@ -4,11 +4,11 @@ describe "Deploy" do
   before {@summary = "This is a test summary"}
 
   it "fails if the metod to be executed is not passed in" do
-    ::Deploy::Setup.init({:method => ''}, @summary).should == 1
+    ::Deploy::Setup.init({:method => '', :quiet => true, :dry => true}, @summary).should == 1
   end
 
   it 'requires a minamin amount of data in a method' do
-    options = {:method => 'merge_branch', :quiet => true}
+    options = {:method => 'merge_branch', :quiet => true, :dry => true}
 
     should.raise do
       ::Deploy::Setup.init(options, @summary)

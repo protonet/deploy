@@ -62,12 +62,12 @@ module Deploy
 
         def self.run_now!(command)
           puts "EXECUTING: #{command}" if verbose?
-          system command if should_i_do_it?
+          system command unless present?(:dry_run)
         end
 
         def self.run_now_with_return!(command)
           puts "EXECUTING: #{command}" if verbose?
-          `#{command}` if should_i_do_it?
+          `#{command}` unless present?(:dry_run)
         end
 
         def self.push!
@@ -89,7 +89,7 @@ module Deploy
             run_now!(local_commands.join("; "))           unless local_commands.empty?
             run_now!(ssh_cmd(remote_commands.join("; "))) unless remote_commands.empty?
 
-            puts "\n" if should_i_do_it?
+            puts "\n" unless present?(:dry_run)
             self.commands = []
           end
         end
