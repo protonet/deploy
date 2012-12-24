@@ -22,11 +22,12 @@ module Deploy
       dep_config.set :verbose, (dep_config.dry_run && dep_config.env != 'test') ? true : !options[:quiet]
 
       # Set the configuration options
-      dep_config.set :deploy_root, "/var/www"
-      dep_config.set :app_name,    "test"
-      dep_config.set :shell,       "/bin/bash"
-      dep_config.set :app_root,    "#{dep_config.deploy_root}/#{dep_config.app_name}"
-      dep_config.set :use_bundler, false
+      dep_config.set :deploy_root,    "/var/www"
+      dep_config.set :app_name,       "test"
+      dep_config.set :shell,          "/bin/bash"
+      dep_config.set :app_root,       "#{dep_config.deploy_root}/#{dep_config.app_name}"
+      dep_config.set :use_bundler,    false
+      dep_config.set :composite_name, "#{dep_config.app_name}-#{dep_config.env}"
 
       # Allow methods to manually set the required params in order for it to run
 

@@ -12,9 +12,12 @@ module Deploy
     def self.load_config(file)
       if File.exists?(file)
         require file
+
         DeployConfig.common
         DeployConfig.send(dep_config.env)
-        dep_config.set :app_root, "#{dep_config.deploy_root}/#{dep_config.app_name}"
+
+        dep_config.set :app_root,       "#{dep_config.deploy_root}/#{dep_config.app_name}"
+        dep_config.set :composite_name, "#{dep_config.app_name}-#{dep_config.env}"
       end
     end
 
