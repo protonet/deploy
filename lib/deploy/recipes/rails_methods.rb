@@ -9,9 +9,14 @@ module Deploy
             cmd = []
             cmd << "cd #{dep_config.app_root}"
             cmd << "RAILS_ENV=#{dep_config.env}"
-            cmd << "bundle exec" if present?(:use_bundler)
-            cmd << "rake #{command}"
-            remote cmd.join(' ')
+
+            if present?(:bundler_use)
+              cmd << "bundle exec rake #{command}"
+            else
+              cmd << "rake #{command}"
+            end
+
+            remote cmd.join(' && ')
           end
 
           task :create_directories, "create the directory structure" do

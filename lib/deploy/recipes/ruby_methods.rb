@@ -8,9 +8,14 @@ module Deploy
           task :rake, 'Run a command via rake' do
             cmd = []
             cmd << "cd #{dep_config.app_root}"
-            cmd << "bundle exec" if present?(:use_bundler)
-            cmd << "rake #{command}"
-            remote cmd.join(' ')
+
+            if present?(:bundler_use)
+              cmd << "bundle exec rake #{command}"
+            else
+              cmd << "rake #{command}"
+            end
+
+            remote cmd.join(' && ')
           end
 
         end
