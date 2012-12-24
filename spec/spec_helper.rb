@@ -15,8 +15,13 @@ class Bacon::Context
   def common_methods
     [
       :create_directories,
-      :setup_db,
+      :precompile_assets,
+      :migrate_db,
+      :create_db,
       :bundle,
+      :load_schema,
+      :remove_tmp_cache,
+      :remove_assets,
     ]
   end
 

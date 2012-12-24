@@ -1,16 +1,23 @@
 require "#{File.dirname(File.expand_path(__FILE__))}/spec_helper"
 
 describe "Deploy" do
-  it "fails if minimum amount of data is not passed in" do
-    opts = [
-     {:environment => ''},
-     {:method      => ''},
-   ]
+  before {@summary = "This is a test summary"}
 
-    summary = "This is a test summary"
+  it "fails if the metod to be executed is not passed in" do
+    ::Deploy::Setup.init({:method => ''}, @summary).should == 1
+  end
 
-    opts.each do |opt|
-      ::Deploy::Setup.init(opt,summary).should == 1
+  it 'requires a minamin amount of data in a method' do
+    options = {:method => 'merge_branch', :quiet => true}
+
+    should.raise do
+      ::Deploy::Setup.init(options, @summary)
+    end
+
+    should.not.raise do
+      dep_config.set(:git_from_branch, :master)
+      dep_config.set(:git_to_branch, :staging)
+      ::Deploy::Setup.init(options, @summary)
     end
   end
 end

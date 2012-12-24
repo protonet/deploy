@@ -12,6 +12,7 @@ module Deploy
     def self.load_config(file)
       if File.exists?(file)
         require file
+        DeployConfig.common
         DeployConfig.send(dep_config.env)
         dep_config.set :app_root, "#{dep_config.deploy_root}/#{dep_config.app_name}"
       end
@@ -54,19 +55,6 @@ module Deploy
         key, value = p.split('=')
         dep_config.set(key,value)
       end
-    end
-
-    def self.required_params(options)
-      r_params = {
-        :default => [:environment, :method],
-        :methods => [],
-        :revert  => [:environment],
-      }
-
-      return r_params[:methods] if options[:methods]
-      return r_params[:revert]  if options[:revert]
-      return []                 if options[:list] || options[:generate]
-      r_params[:default]
     end
 
     def self.spacing(word, spaces)

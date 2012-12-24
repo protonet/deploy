@@ -2,12 +2,9 @@ module Deploy
   class Setup
 
     def self.init(options, summary)
-      # Check whether we have the minimum set of options
-      ::Deploy::Util.required_params(options).each do |param|
-        unless options.keys.include?(param)
-          puts summary if should_i_do_it?
-          return 1
-        end
+      if options[:method].to_s == ''
+        puts summary if should_i_do_it?
+        return 1
       end
 
       # Assign the parsed options to local variables
@@ -29,6 +26,9 @@ module Deploy
       dep_config.set :app_name,    "test"
       dep_config.set :shell,       "/bin/bash"
       dep_config.set :app_root,    "#{dep_config.deploy_root}/#{dep_config.app_name}"
+      dep_config.set :use_bundler, false
+
+      # Allow methods to manually set the required params in order for it to run
 
       Deploy::Util.config_environment
       Deploy::Util.custom_config(config_file) if config_file
