@@ -44,6 +44,10 @@ module Deploy
             rake 'assets:precompile'
           end
 
+          task :fix_assets_permissions, "Fix the permissions for assets" do
+            remote "sudo chown -Rf #{dep_config.remote_user}:#{dep_config.remote_group} #{dep_config.app_root}/public/assets"
+          end
+
           task :migrate_db, "Migrate the database" do
             rake 'db:migrate'
           end
