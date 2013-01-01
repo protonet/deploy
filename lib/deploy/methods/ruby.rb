@@ -9,7 +9,7 @@ module Deploy
             cmd = []
             cmd << "cd #{dep_config.app_root}"
 
-            if present?(:bundler_use)
+            if config_present?(:bundler_use)
               cmd << "bundle exec rake #{command}"
             else
               cmd << "rake #{command}"

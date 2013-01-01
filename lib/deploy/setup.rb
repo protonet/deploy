@@ -33,7 +33,7 @@ module Deploy
       return Deploy::Util.methods_list(DeployRecipes) if show_methods
 
       if method.to_s == ''
-        puts summary unless present?(:dry_run)
+        puts summary unless config_present?(:dry_run)
         return 1
       end
 

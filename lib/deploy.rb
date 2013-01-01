@@ -36,7 +36,7 @@ def verbose?
   dep_config.verbose
 end
 
-def present?(key)
+def config_present?(key)
   dep_config.exists?(key) && dep_config.get(key)
 end
 

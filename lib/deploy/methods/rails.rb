@@ -10,7 +10,7 @@ module Deploy
             cmd << "cd #{dep_config.app_root}"
             cmd << "RAILS_ENV=#{dep_config.env}"
 
-            if present?(:bundler_use)
+            if config_present?(:bundler_use)
               cmd << "bundle exec rake #{command}"
             else
               cmd << "rake #{command}"
@@ -33,7 +33,7 @@ module Deploy
             cmd << "--without test development"
             cmd << "--deployment"
 
-            if present?(:bundler_binstubs)
+            if config_present?(:bundler_binstubs)
               cmd << "--binstubs"
             end
 

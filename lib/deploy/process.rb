@@ -52,22 +52,22 @@ module Deploy
 
         def self.ssh_cmd(commands)
           cmd = "ssh "
-          cmd << "#{dep_config.extra_ssh_options} " if present?(:extra_ssh_options)
+          cmd << "#{dep_config.extra_ssh_options} " if config_present?(:extra_ssh_options)
           cmd << "#{dep_config.username}@#{dep_config.remote} "
           cmd << "'"
-          cmd << "#{dep_config.after_login}; " if present?(:after_login)
+          cmd << "#{dep_config.after_login}; " if config_present?(:after_login)
           cmd << "#{commands}"
           cmd << "'"
         end
 
         def self.run_now!(command)
           puts "EXECUTING: #{command}" if verbose?
-          system command unless present?(:dry_run)
+          system command unless config_present?(:dry_run)
         end
 
         def self.run_now_with_return!(command)
           puts "EXECUTING: #{command}" if verbose?
-          `#{command}` unless present?(:dry_run)
+          `#{command}` unless config_present?(:dry_run)
         end
 
         def self.push!
@@ -89,7 +89,7 @@ module Deploy
             run_now!(local_commands.join("; "))           unless local_commands.empty?
             run_now!(ssh_cmd(remote_commands.join("; "))) unless remote_commands.empty?
 
-            puts "\n" unless present?(:dry_run)
+            puts "\n" unless config_present?(:dry_run)
             self.commands = []
           end
         end
