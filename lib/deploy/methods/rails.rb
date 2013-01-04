@@ -8,12 +8,11 @@ module Deploy
           def self.rake(command)
             cmd = []
             cmd << "cd #{dep_config.app_root}"
-            cmd << "RAILS_ENV=#{dep_config.env}"
 
             if config_present?(:bundler_use)
-              cmd << "bundle exec rake #{command}"
+              cmd << "RAILS_ENV=#{dep_config.env} bundle exec rake #{command}"
             else
-              cmd << "rake #{command}"
+              cmd << "RAILS_ENV=#{dep_config.env} rake #{command}"
             end
 
             remote cmd.join(' && ')
