@@ -68,7 +68,7 @@ module Deploy
             raise "No tag specified" unless ENV['GIT_TAG']
             remote "cd #{dep_config.app_root}"
             remote 'git fetch'
-            remote "git checkout #{ENV['GIT_TAG']}"
+            remote "git checkout -f #{ENV['GIT_TAG']}"
           end
         end
       end
