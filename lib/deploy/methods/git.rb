@@ -49,7 +49,7 @@ module Deploy
           end
 
           task :tag_and_release, 'Makes a tag from the current staging branch' do
-            from_branch = require_params(:git_from_branch)
+            from_branch = require_params(:git_from_branch).first
 
             starting_branch = `git rev-parse --abbrev-ref HEAD`.strip
 
@@ -66,6 +66,7 @@ module Deploy
 
           task :checkout_tag, 'Deploys to the environment using a tag' do
             raise "No tag specified" unless ENV['GIT_TAG']
+            remote "cd #{dep_config.app_root}"
             remote 'git fetch'
             remote "git checkout #{ENV['GIT_TAG']}"
           end
