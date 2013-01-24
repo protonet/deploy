@@ -14,7 +14,7 @@ module Deploy
 
       dep_config.set :env,     options[:environment]
       dep_config.set :dry_run, options[:dry]
-      dep_config.set :verbose, dep_config.dry_run ? false : !options[:quiet]
+      dep_config.set :verbose, dep_config.dry_run ? true : !options[:quiet]
 
       # Set the configuration options
       dep_config.set :deploy_root,    "/var/www"
