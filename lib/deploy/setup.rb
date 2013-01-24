@@ -6,6 +6,11 @@ module Deploy
       list_recipes   = options[:list]
       return Deploy::Util.recipe_list if list_recipes
 
+      if options[:verbose] && options[:quiet]
+        puts "You cannot have quiet and verbose at the same time"
+        return 1
+      end
+
       show_methods   = options[:methods]
       method         = options[:method]
       config_file    = options[:config]
@@ -14,7 +19,15 @@ module Deploy
 
       dep_config.set :env,     options[:environment]
       dep_config.set :dry_run, options[:dry]
-      dep_config.set :verbose, dep_config.dry_run ? true : !options[:quiet]
+      dep_config.set :raw,     options[:raw]
+
+      if options[:verbose] || options[:dry]
+        dep_config.set :verbose, true
+      end
+
+      if options[:quiet] || options[:raw]
+        dep_config.set :verbose, false
+      end
 
       # Set the configuration options
       dep_config.set :deploy_root,    "/var/www"

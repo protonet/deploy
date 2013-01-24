@@ -17,6 +17,8 @@ op = OptionParser.new do |opts|
   opts.on("-M", "--methods", "Show methods")                                    { |m| options[:methods]     = m }
   opts.on("-l", "--list", "List all recipes")                                   { |l| options[:list]        = l }
   opts.on("-p", "--parameters PARAMS", "comma separated list of parameters")    { |p| options[:parameters]  = p }
+  opts.on("-r", "--raw", "Output all commands only")                            { |r| options[:raw]         = r }
+  opts.on("-v", "--verbose", "More noise")                                      { |v| options[:verbose]     = v }
 end
 
 op.parse!
