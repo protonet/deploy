@@ -21,6 +21,8 @@ module Deploy
       dep_config.set :dry_run, options[:dry]
       dep_config.set :raw,     options[:raw]
 
+      dep_config.set :verbose, true
+
       if options[:verbose] || options[:dry]
         dep_config.set :verbose, true
       end
