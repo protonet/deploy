@@ -24,6 +24,7 @@ module Deploy
       dep_config.set :verbose, true
 
       if options[:verbose] || options[:dry]
+        options[:quiet] = options[:raw] = false
         dep_config.set :verbose, true
       end
 
