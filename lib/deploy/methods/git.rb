@@ -53,9 +53,14 @@ module Deploy
 
             starting_branch = `git rev-parse --abbrev-ref HEAD`.strip
 
+            unless ENV['TAG_MESSAGE']
+              puts "No message specified"
+              raise "No message specified"
+            end
+
             cmd = []
             cmd << "git checkout #{from_branch}" if starting_branch != from_branch
-            cmd << "git tag -a release-#{Time.now.utc.strftime('%Y%m%d%H%M%S')} -m"
+            cmd << "git tag -a release-#{Time.now.utc.strftime('%Y_%m_%d-%H_%M_%S')} -m \"#{ENV['TAG_MESSAGE']}\""
             cmd << "git push"
             cmd << "git push --tags"
 
@@ -65,7 +70,11 @@ module Deploy
           end
 
           task :checkout_tag, 'Deploys to the environment using a tag' do
-            raise "No tag specified" unless ENV['GIT_TAG']
+            unless ENV['GIT_TAG']
+              puts "No tag specified"
+              raise "No tag specified"
+            end
+
             remote "cd #{dep_config.app_root}"
             remote 'git fetch'
             remote "git checkout -f #{ENV['GIT_TAG']}"
