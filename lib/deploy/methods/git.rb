@@ -54,8 +54,9 @@ module Deploy
             starting_branch = `git rev-parse --abbrev-ref HEAD`.strip
 
             unless ENV['TAG_MESSAGE']
-              puts "No message specified"
-              raise "No message specified"
+              message = "No message specified [TAG_MESSAGE]"
+              puts message
+              raise message
             end
 
             cmd = []
@@ -71,8 +72,9 @@ module Deploy
 
           task :checkout_tag, 'Deploys to the environment using a tag' do
             unless ENV['GIT_TAG']
-              puts "No tag specified"
-              raise "No tag specified"
+              message = "No tag specified [GIT_TAG]"
+              puts message
+              raise message
             end
 
             remote "cd #{dep_config.app_root}"
