@@ -140,7 +140,7 @@ module Deploy
 
       def copy_code_from_local_release
         release_dir
-        destination_path = File.join(dep_config.get(:releases_path), Time.now.strftime('%Y%m%d%H%M%S'))
+        destination_path = File.join(config.get(:releases_path), Time.now.strftime('%Y%m%d%H%M%S'))
         run_now!("cp -r /tmp/protonet-release-latest/dashboard #{destination_path}")
       end
 
