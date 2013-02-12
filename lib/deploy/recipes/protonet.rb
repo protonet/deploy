@@ -133,32 +133,19 @@ module Deploy
 
       def prepare_code
         create_directories
-        get_code_and_unpack
+        copy_code_from_local_release
         link_shared_directories
         true
       end
 
-      def get_code_and_unpack
-        FileUtils.cd "/tmp"
-        run_now! "rm -f /tmp/dashboard.tar.gz"
-        release = "/#{ENV["RELEASE_VERSION"]}" if ENV["RELEASE_VERSION"]
-        run_now!("wget http://releases.protonet.info/release/get/#{config.get(:key)}#{release} -O dashboard.tar.gz") && unpack
+      def copy_code_from_local_release
+        release_dir
+        destination_path = File.join(dep_config.get(:releases_path), Time.now.strftime('%Y%m%d%H%M%S'))
+        run_now!("cp -r /tmp/protonet-release-latest/dashboard #{destination_path}")
       end
 
       def release_dir
         FileUtils.mkdir_p config.get(:releases_path) if !File.exists? config.get(:releases_path)
-      end
-
-      def unpack
-        release_dir
-        if File.exists?("/tmp/dashboard.tar.gz")
-          FileUtils.cd "/tmp"
-          FileUtils.rm_rf "/tmp/dashboard"
-          run_now! "tar -xzf #{"/tmp/dashboard.tar.gz"}"
-          release_timestamp = "#{config.get(:releases_path)}/#{Time.now.strftime('%Y%m%d%H%M%S')}"
-          FileUtils.mkdir_p release_timestamp
-          run_now! "mv /tmp/dashboard/* #{release_timestamp}"
-        end
       end
 
       def clean_up
