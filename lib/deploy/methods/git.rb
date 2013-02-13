@@ -61,7 +61,7 @@ module Deploy
 
             cmd = []
             cmd << "git checkout #{from_branch}" if starting_branch != from_branch
-            cmd << "git tag -a release-#{Time.now.utc.strftime('%Y_%m_%d-%H_%M_%S')} -m \"#{ENV['TAG_MESSAGE']}\""
+            cmd << "git tag -a release-#{Time.now.utc.strftime('%Y-%m-%d_%H-%M-%S')} -m \"#{ENV['TAG_MESSAGE']}\""
             cmd << "git push"
             cmd << "git push --tags"
 
@@ -78,7 +78,7 @@ module Deploy
             end
 
             remote "cd #{dep_config.app_root}"
-            remote 'git fetch'
+            remote 'git fetch -f -t'
             remote "git checkout -f #{ENV['GIT_TAG']}"
           end
         end
