@@ -17,7 +17,11 @@ Gem::Specification.new do |s|
   s.rubyforge_project           = "deploy"
 
   s.add_development_dependency  "rake"
-  s.add_development_dependency  "bacon"
+  s.add_development_dependency  "minitest"
+  s.add_development_dependency  "minitest-reporters"
+  s.add_development_dependency  "simplecov"
+  s.add_development_dependency  "activesupport"
+  s.add_development_dependency  "wrong"
 
   s.add_runtime_dependency      "simpleconfig"
   s.add_runtime_dependency      "erubis"

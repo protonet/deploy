@@ -1,5 +1,5 @@
 module Deploy
-  module Methods
+  module Tasks
     module Git
 
       def self.included(base)

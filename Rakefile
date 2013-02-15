@@ -1,8 +1,8 @@
 require 'bundler'
 Bundler::GemHelper.install_tasks
 
-desc "Run all tests"
-task :test do
+desc "Run all specs"
+task :spec do
   Dir['spec/*_spec.rb'].each do |spec|
     #puts "Running #{spec}..."
     load spec

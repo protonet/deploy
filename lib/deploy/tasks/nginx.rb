@@ -1,5 +1,5 @@
 module Deploy
-  module Methods
+  module Tasks
     module Nginx
 
       def self.included(base)

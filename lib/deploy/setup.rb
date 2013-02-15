@@ -3,15 +3,15 @@ module Deploy
 
     def self.init(options, summary)
       # Assign the parsed options to local variables
-      list_recipes   = options[:list]
-      return Deploy::Util.recipe_list if list_recipes
+      list_tasks_modules   = options[:list]
+      return Deploy::Util.tasks_modules_list if list_tasks_modules
 
       if options[:verbose] && options[:quiet]
         puts "You cannot have quiet and verbose at the same time"
         return 1
       end
 
-      show_methods   = options[:methods]
+      show_tasks     = options[:tasks]
       method         = options[:method]
       config_file    = options[:config]
 
@@ -45,8 +45,8 @@ module Deploy
       Deploy::Util.config_environment
       Deploy::Util.custom_config(config_file) if config_file
 
-      require "#{VIRTUAL_APP_ROOT}/config/deploy_recipes.rb"
-      return Deploy::Util.methods_list(DeployRecipes) if show_methods
+      require "#{VIRTUAL_APP_ROOT}/config/deploy_tasks.rb"
+      return Deploy::Util.tasks_list(DeployRecipes) if show_tasks
 
       if method.to_s == ''
         puts summary unless config_present?(:dry_run)

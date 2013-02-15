@@ -19,14 +19,14 @@ require 'deploy/process'
 require 'deploy/dsl'
 require 'deploy/base'
 
-require 'deploy/methods/padrino_data_mapper'
-require 'deploy/methods/git'
-require 'deploy/methods/nginx'
-require 'deploy/methods/passenger'
-require 'deploy/methods/unicorn'
-require 'deploy/methods/ruby'
-require 'deploy/methods/rails'
-require 'deploy/methods/rails_data_mapper'
+require 'deploy/tasks/padrino_data_mapper'
+require 'deploy/tasks/git'
+require 'deploy/tasks/nginx'
+require 'deploy/tasks/passenger'
+require 'deploy/tasks/unicorn'
+require 'deploy/tasks/ruby'
+require 'deploy/tasks/rails'
+require 'deploy/tasks/rails_data_mapper'
 
 def dep_config
   SimpleConfig.for(:deploy)

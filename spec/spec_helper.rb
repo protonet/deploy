@@ -1,18 +1,34 @@
 VIRTUAL_APP_ROOT = "#{File.dirname(File.expand_path(__FILE__))}" unless defined?(VIRTUAL_APP_ROOT)
 
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter 'spec'
+  add_filter 'vendor'
+  add_filter 'config'
+
+  # add_group 'Models',      'app/models'
+  # add_group 'Controllers', 'app/controllers'
+  # add_group 'Helpers',     'app/helpers'
+  # add_group 'Searchers',   'app/searchers'
+  add_group 'Libraries',   'lib'
+end
+
+SimpleCov.command_name 'Minitest'
+
 require "deploy"
-require 'bacon'
+require 'minitest/autorun'
+require 'wrong/adapters/minitest'
+require 'minitest/pride'
+
+Wrong.config.alias_assert :confirm, :override => true
+Wrong.config.alias_deny   :deny,    :override => true
 
 dep_config.set :env,         'test'
 dep_config.set :dry_run,     true
 
-class Bacon::Context
-
-  def not_real_recipes
-    @not_real_recipes ||= ["common.rb", "base.rb"]
-  end
-
-  def common_methods
+class MiniTest::Spec
+  def common_tasks
     [
       :create_directories,
       :precompile_assets,
@@ -25,15 +41,22 @@ class Bacon::Context
     ]
   end
 
-  def recipes
+  def task_bundles
     {
-      :rails_common_methods => common_methods
+      :rails => common_tasks
     }
   end
 
+  def confirm_raises(&block)
+    begin
+      block.call
+      return false
+    rescue Exception => e
+      return true
+    end
+  end
+
+  def deny_raises(&block)
+    !confirm_raises(&block)
+  end
 end
-
-# Bacon.extend(Bacon.const_get("KnockOutput"))
-Bacon.extend(Bacon.const_get("TestUnitOutput"))
-Bacon.summary_on_exit
-

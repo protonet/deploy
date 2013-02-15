@@ -2,7 +2,7 @@ require 'fileutils'
 require 'erb'
 
 module Deploy
-  module Methods
+  module Tasks
     class Protonet
 
       include ::Deploy::Process

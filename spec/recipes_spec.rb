@@ -16,32 +16,29 @@ describe "All Recipes" do
   end
 
   it "runs" do
-    recipes.each do |recipe, recipe_methods|
-      recipe_methods.each do |recipe_method|
-        @options[:method] = recipe_method
-        ::Deploy::Setup.init(@options, "").should == 0
+    task_bundles.each do |tasks_name, tasks|
+      tasks.each do |task|
+        @options[:task] = task
+        confirm { ::Deploy::Setup.init(@options, "") == 0 }
       end
     end
   end
 
   it "appends a method in the chain" do
-    ::Deploy::Setup.init(@options.merge({:method => 'test'}), "").should == 0
+    confirm { ::Deploy::Setup.init(@options.merge({:method => 'test'}), "") == 0 }
   end
 
   it "allows you to pass in parameters" do
-    recipes.each do |recipe, recipe_methods|
-      recipe_methods.each do |recipe_method|
-        @options[:recipe] = recipe.to_s
-        @options[:method] = recipe_method
+    task_bundles.each do |tasks_name, tasks|
+      tasks.each do |task|
+        @options[:tasks_name] = tasks_name.to_s
+        @options[:task] = task
         @options[:parameters] = "TEST1=test1,TEST2=test2"
         ::Deploy::Setup.init(@options, "")
-        dep_config.TEST1.should == "test1"
-        dep_config.TEST2.should == "test2"
+        confirm { dep_config.TEST1 == "test1" }
+        confirm { dep_config.TEST2 == "test2" }
       end
     end
   end
 
-
-
 end
-

@@ -1,5 +1,5 @@
 module Deploy
-  module Methods
+  module Tasks
     module Passenger
 
       def self.included(base)

@@ -1,5 +1,5 @@
 module Deploy
-  module Methods
+  module Tasks
     class RailsDataMapper
 
       def self.included(base)

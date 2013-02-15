@@ -1,5 +1,5 @@
 module Deploy
-  module Methods
+  module Tasks
     module Rails
 
       def self.included(base)

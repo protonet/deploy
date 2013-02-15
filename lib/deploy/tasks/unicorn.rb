@@ -1,5 +1,5 @@
 module Deploy
-  module Methods
+  module Tasks
     module Unicorn
 
       def self.included(base)

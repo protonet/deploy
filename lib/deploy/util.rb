@@ -21,15 +21,7 @@ module Deploy
       end
     end
 
-    def self.camelize(string)
-      string = string.to_s
-      indexes = [0]
-      string.size.times { |i| indexes << (i + 1) if string[i,1] == '_' }
-      indexes.each    { |i| string[i] = string[i,1].upcase }
-      string.gsub("_", "")
-    end
-
-    def self.methods_list(recipe_clazz)
+    def self.tasks_list(recipe_clazz)
       if recipe_clazz
         recipe_clazz.all_descriptions.each do |description|
           puts "#{recipe_clazz}:  #{spacing(description.first, 40)}#{description.last}"
@@ -38,10 +30,10 @@ module Deploy
       return 0
     end
 
-    def self.recipe_list
+    def self.tasks_modules_list
       sorted_files = []
 
-      Dir["#{APP_ROOT}/lib/deploy/recipes/*.rb"].each do |file_name|
+      Dir["#{APP_ROOT}/lib/deploy/tasks/*.rb"].each do |file_name|
         chopped_file = file_name.split('/').last
         sorted_files << chopped_file.split('.').first
       end
