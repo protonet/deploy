@@ -4,6 +4,11 @@ module Deploy
     def self.init(options, summary)
       process_options(options)
 
+      if options[:list]
+        puts Deploy::Util.tasks_modules_list
+        return 0
+      end
+
       Deploy::Util.config_environment
       Deploy::Util.custom_config(config_file) if options[:config]
 
@@ -27,11 +32,6 @@ module Deploy
     end
 
     def self.process_options(options)
-      if options[:list]
-        Deploy::Util.tasks_modules_list
-        return
-      end
-
       # Set any parameters passed in
       Deploy::Util.set_parameters(options[:parameters])
 
