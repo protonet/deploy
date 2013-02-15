@@ -12,6 +12,7 @@ describe "All Recipes" do
       :environment => 'test',
       :dry         => true,
       :quiet       => true,
+      :test       => true,
     }
   end
 
@@ -24,8 +25,8 @@ describe "All Recipes" do
     end
   end
 
-  it "appends a method in the chain" do
-    confirm { ::Deploy::Setup.init(@options.merge({:method => 'test'}), "") == 0 }
+  it "appends a task in the chain" do
+    confirm { ::Deploy::Setup.init(@options.merge({:task => 'test'}), "") == 0 }
   end
 
   it "allows you to pass in parameters" do

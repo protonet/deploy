@@ -1,4 +1,4 @@
-class DeployRecipes < Deploy::Base
+class DeployTasks < Deploy::Base
 
   include ::Deploy::Tasks::Rails
   include ::Deploy::Tasks::Git
