@@ -5,6 +5,19 @@ module Deploy
       def self.included(base)
         base.class_eval do
 
+          def self.create_conf_file(template, output, options)
+            require 'erubis'
+
+            nginx_conf     = File.read(template)
+            nginx_erb_conf = Erubis::Eruby.new(nginx_conf)
+
+            filename = output
+
+            File.open(output, 'w') do |file|
+              file.write(nginx_erb_conf.result(options))
+            end
+          end
+
           task :unicorn_start, "Start unicorn" do
             remote "sudo /etc/init.d/#{dep_config.unicorn_script} start"
           end
@@ -21,22 +34,9 @@ module Deploy
             remote "sudo /etc/init.d/#{dep_config.unicorn_script} upgrade"
           end
 
-          def self.create_conf_file(template, output, options)
-            require 'erubis'
-
-            nginx_conf     = File.read(template)
-            nginx_erb_conf = Erubis::Eruby.new(nginx_conf)
-
-            filename = output
-
-            File.open(output, 'w') do |file|
-              file.write(nginx_erb_conf.result(options))
-            end
-          end
-
           task :unicorn_setup_config, "Setup unicorn config for nginx and as an init file" do
-            sudo "ln -nfs #{dep_config.app_root}/config/deploy/nginx/unicorn_nginx_#{dep_config.composite_name} /etc/nginx/sites-enabled/"
-            sudo "ln -nfs #{dep_config.app_root}/config/deploy/unicorn/unicorn_init_#{dep_config.composite_name} /etc/init.d/"
+            remote "sudo ln -nfs #{dep_config.app_root}/config/deploy/nginx/unicorn_nginx_#{dep_config.composite_name} /etc/nginx/sites-enabled/"
+            remote "sudo ln -nfs #{dep_config.app_root}/config/deploy/unicorn/unicorn_init_#{dep_config.composite_name} /etc/init.d/"
           end
 
           task :create_config_nginx, "Create nginx conf file" do

@@ -30,19 +30,6 @@ module Deploy
       return 0
     end
 
-    def self.tasks_modules_list
-      sorted_files = []
-
-      Dir["#{APP_ROOT}/lib/deploy/tasks/*.rb"].each do |file_name|
-        chopped_file = file_name.split('/').last
-        sorted_files << chopped_file.split('.').first
-      end
-
-      sorted_files.each {|sorted_file| puts sorted_file}
-
-      return 0
-    end
-
     def self.set_parameters(parameters)
       return unless parameters
       params = parameters.split(',')

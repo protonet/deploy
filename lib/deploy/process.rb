@@ -4,6 +4,14 @@ module Deploy
     def self.included(base)
       base.class_eval do
 
+        def self.queue(actions)
+          if actions.is_a?(Array)
+            self.actions = self.actions + actions
+          else
+            self.actions << actions
+          end
+        end
+
         def self.process_queue
           self.merge_actions
           self.actions.each do |action|
@@ -12,14 +20,6 @@ module Deploy
             push!
           end
           self.actions = []
-        end
-
-        def self.queue(actions)
-          if actions.is_a?(Array)
-            self.actions = self.actions + actions
-          else
-            self.actions << actions
-          end
         end
 
         def self.merge_actions
@@ -66,7 +66,12 @@ module Deploy
           if config_present?(:raw)
             puts command
           else
-            system command unless config_present?(:dry_run)
+            return if config_present?(:dry_run)
+
+            unless system(command)
+              puts "*** Failure Not Continuing ***"
+              exit(1)
+            end
           end
         end
 
@@ -76,7 +81,8 @@ module Deploy
           if config_present?(:raw)
             puts command
           else
-            `#{command}` unless config_present?(:dry_run)
+            return if config_present?(:dry_run)
+            `#{command}`
           end
         end
 
@@ -96,11 +102,11 @@ module Deploy
               end
             end
 
+            run_now!(local_commands.join("; "))  unless local_commands.empty?
+
             if config_present?(:raw)
-              run_now!(local_commands.join("; "))  unless local_commands.empty?
               run_now!(remote_commands.join("; ")) unless remote_commands.empty?
             else
-              run_now!(local_commands.join("; "))           unless local_commands.empty?
               run_now!(ssh_cmd(remote_commands.join("; "))) unless remote_commands.empty?
             end
 

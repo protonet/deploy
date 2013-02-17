@@ -3,6 +3,7 @@ PATH
   specs:
     deploy (1.6)
       erubis
+      pony
       simpleconfig
 
 GEM
@@ -17,6 +18,11 @@ GEM
     erubis (2.7.0)
     hashie (1.2.0)
     i18n (0.6.1)
+    mail (2.5.3)
+      i18n (>= 0.4.0)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
+    mime-types (1.21)
     minitest (4.6.1)
     minitest-reporters (0.14.7)
       ansi
@@ -24,6 +30,9 @@ GEM
       minitest (>= 2.12, < 5.0)
       powerbar
     multi_json (1.6.1)
+    polyglot (0.3.3)
+    pony (1.4)
+      mail (> 2.0)
     powerbar (1.0.11)
       ansi (~> 1.4.0)
       hashie (>= 1.1.0)
@@ -40,6 +49,9 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
+    treetop (1.4.12)
+      polyglot
+      polyglot (>= 0.3.1)
     wrong (0.7.0)
       diff-lcs (~> 1.1.2)
       predicated (~> 0.2.6)

@@ -9,15 +9,16 @@ options = {}
 # Parse the options
 op = OptionParser.new do |opts|
   opts.banner = "Usage: dep [options]"
-  opts.on("-e", "--environment ENV", "Environment to execute in")               { |e| options[:environment] = e }
-  opts.on("-t", "--task TASK", "The task to run")                               { |t| options[:task]        = t }
-  opts.on("-c", "--config CONFIG", "Path to custom config")                     { |c| options[:config]      = c }
-  opts.on("-d", "--dry", "Just show the commands")                              { |d| options[:dry]         = d }
-  opts.on("-q", "--quiet", "Less noise")                                        { |q| options[:quiet]       = q }
-  opts.on("-T", "--tasks", "Show tasks")                                        { |t| options[:tasks]       = t }
-  opts.on("-l", "--list", "List all tasks modules")                             { |l| options[:list]        = l }
-  opts.on("-p", "--parameters PARAMS", "comma separated list of parameters")    { |p| options[:parameters]  = p }
-  opts.on("-r", "--raw", "Output all commands only")                            { |r| options[:raw]         = r }
+  opts.on("-c", "--config CONFIG", "Path to custom config")                            { |c| options[:config]      = c }
+  opts.on("-d", "--dry", "Just show the commands")                                     { |d| options[:dry]         = d }
+  opts.on("-e", "--environment ENV", "Environment to execute in")                      { |e| options[:environment] = e }
+  opts.on("-o", "--without WITHOUT", "remove commands from the current command set")   { |o| options[:without]     = o }
+  opts.on("-p", "--parameters PARAMS", "comma separated list of parameters")           { |p| options[:parameters]  = p }
+  opts.on("-q", "--quiet", "Less noise")                                               { |q| options[:quiet]       = q }
+  opts.on("-r", "--raw", "Output all commands only")                                   { |r| options[:raw]         = r }
+  opts.on("-T", "--tasks", "Show tasks")                                               { |t| options[:tasks]       = t }
+  opts.on("-t", "--tasks TASKS", "Comma separated list of tasks to run")               { |t| options[:tasks]       = t }
+  opts.on("-w", "--with WITH", "add commands to the current command set")              { |w| options[:with]        = w }
 end
 
 op.parse!

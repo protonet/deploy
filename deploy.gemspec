@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency      "simpleconfig"
   s.add_runtime_dependency      "erubis"
+  s.add_runtime_dependency      "pony"
 
   s.files                       = `git ls-files`.split("\n")
   s.test_files                  = `git ls-files -- {test,spec,features}/*`.split("\n")
