@@ -16,7 +16,7 @@ op = OptionParser.new do |opts|
   opts.on("-p", "--parameters PARAMS", "comma separated list of parameters")           { |p| options[:parameters]  = p }
   opts.on("-q", "--quiet", "Less noise")                                               { |q| options[:quiet]       = q }
   opts.on("-r", "--raw", "Output all commands only")                                   { |r| options[:raw]         = r }
-  opts.on("-T", "--tasks", "Show tasks")                                               { |t| options[:tasks]       = t }
+  opts.on("-T", "--all_tasks", "Show tasks")                                           { |t| options[:all_tasks]   = t }
   opts.on("-t", "--tasks TASKS", "Comma separated list of tasks to run")               { |t| options[:tasks]       = t }
   opts.on("-w", "--with WITH", "add commands to the current command set")              { |w| options[:with]        = w }
 end

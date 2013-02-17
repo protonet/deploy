@@ -20,6 +20,7 @@ require "deploy"
 require 'minitest/autorun'
 require 'wrong/adapters/minitest'
 require 'minitest/pride'
+require 'pry'
 
 Wrong.config.alias_assert :confirm, :override => true
 Wrong.config.alias_deny   :deny,    :override => true

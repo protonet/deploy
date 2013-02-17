@@ -4,22 +4,24 @@ module Deploy
     def self.init(options, summary)
       process_options(options)
 
-      return Deploy::Util.tasks_modules_list if options[:list]
-
       Deploy::Util.config_environment
       Deploy::Util.custom_config(config_file) if options[:config]
 
       # Require your tasks class
       require "#{VIRTUAL_APP_ROOT}/config/deploy_tasks.rb"
-      return Deploy::Util.tasks_list(DeployTasks) if options[:tasks]
+      return Deploy::Util.tasks_list(DeployTasks) if options[:all_tasks]
 
-      # task is the only require option, so make sure it is there
-      if options[:task].to_s == ''
-        raise summary unless config_present?(:dry_run)
+      # tasks is the only required option, so make sure it is there
+      if (options[:tasks] = options[:tasks].to_s) == ''
+        raise summary
       end
 
+      tasks = options[:tasks].split(',')
+
       # Execute the task
-      DeployTasks.send(options[:task].to_sym)
+      tasks.each do |task|
+        DeployTasks.send(task.to_sym)
+      end
 
       # If there are any commands still in the commands cache, push them
       DeployTasks.push! unless DeployTasks.commands.empty?
@@ -27,6 +29,7 @@ module Deploy
       return 0
     rescue Exception => e
       puts "Error: #{e}" unless options[:quiet]
+      # puts summary
       return 1
     end
 

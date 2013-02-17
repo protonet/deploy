@@ -4,11 +4,11 @@ describe "Deploy" do
   before {@summary = "This is a test summary"}
 
   it "fails if the task to be executed is not passed in" do
-    confirm { ::Deploy::Setup.init({:task => '', :test => true}, @summary) == 1 }
+    confirm { ::Deploy::Setup.init({:tasks => '', :test => true}, @summary) == 1 }
   end
 
   it 'requires a minamin amount of data in a task' do
-    options = {:task => 'merge_branch', :test => true}
+    options = {:tasks => 'merge_branch', :test => true}
 
     confirm do
       ::Deploy::Setup.init(options, @summary) == 1
