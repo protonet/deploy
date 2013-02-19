@@ -1,9 +1,16 @@
 require 'fileutils'
 require 'erb'
 
+# needs a deploy_config that looks like this:
+# set :deploy_root, "/home/protonet"
+# set :app_name,    "german-shepherd"
+# set :database_name, "dashboard_production"
+# set :key, "my-license-key"
+# set :max_num_releases, 5
+
 module Deploy
   module Recipes
-    class Protonet < ::Deploy::Recipes::Base
+    class ProtonetV4 < ::Deploy::Recipes::Base
 
       def create_directory(dir_name, permissions = nil)
         FileUtils.mkdir_p dir_name
@@ -31,7 +38,6 @@ module Deploy
           :npm_install,
           :setup_db,
           :link_current,
-          :bundle_mobile,
           :deploy_monit,
           :restart_apache,
           :start_first_run_services,
@@ -46,11 +52,9 @@ module Deploy
           :bundle,
           :npm_install,
           :migrate,
-          # :copy_stage_config,
           :clean_up,
           :link_current,
           :restart_app,
-          :bundle_mobile,
           :deploy_monit,
           :load_crontab,
           :restart_services,
@@ -78,11 +82,6 @@ module Deploy
         monit_command "monitor all"
         sleep 2
         monit_command "start all"
-      end
-
-      # todo: replace by app configuration & remove
-      def copy_stage_config
-        run "if [ -f #{release_path}/config/stage_configs/#{stage}.rb ]; then cp #{release_path}/config/stage_configs/#{stage}.rb #{release_path}/config/environments/stage.rb; fi"
       end
 
       def create_directories
@@ -160,41 +159,33 @@ module Deploy
         true
       end
 
-      def bundle_mobile
-        bundle(true)
-      end
-
-      def bundle(mobile=false)
-        path_extension = mobile ? "/mobile" : ""
-        shared_bundle_path  = File.expand_path('bundle', config.get(:shared_path) + path_extension)
-        release_bundle_path = File.expand_path('.bundle', latest_deploy + path_extension)
+      def bundle
+        shared_bundle_path  = File.expand_path('bundle', config.get(:shared_path))
+        release_bundle_path = File.expand_path('.bundle', latest_deploy)
 
         FileUtils.mkdir_p shared_bundle_path
         FileUtils.ln_s shared_bundle_path, release_bundle_path
 
-        FileUtils.cd latest_deploy + path_extension
-
-        run_now! "#{bundle_cleanup}; bundle install --path=#{release_bundle_path} --without=test cucumber --local"
+        FileUtils.cd latest_deploy do
+          run_now! "#{bundle_cleanup}; bundle install --path=#{release_bundle_path} --without=test cucumber --local"
+        end
       end
 
-      def precompile_assets
-        FileUtils.cd latest_deploy + "/mobile"
-        run_now! "#{bundle_cleanup}; export RACK_ENV='production'; bundle exec rake assets:precompile"
-      end
-      
       def npm_install
         shared_dir  = File.expand_path('node_modules', config.get(:shared_path))
         release_dir = File.expand_path('node/node_modules', latest_deploy)
 
         FileUtils.mkdir_p shared_dir
         FileUtils.ln_s shared_dir, release_dir
-        
-        run_now! "cd #{latest_deploy}/node; export NODE_ENV='production'; npm install"
+        FileUtils.cd latest_deploy do
+          run_now! "export NODE_ENV='production'; npm install"
+        end
       end
 
       def migrate
-        FileUtils.cd latest_deploy
-        run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rake db:migrate"
+        FileUtils.cd latest_deploy do
+          run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rake db:migrate"
+        end
       end
 
       def link_current
