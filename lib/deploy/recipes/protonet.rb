@@ -166,9 +166,7 @@ module Deploy
         FileUtils.mkdir_p shared_bundle_path
         FileUtils.ln_s shared_bundle_path, release_bundle_path
 
-        FileUtils.cd latest_deploy do
-          run_now! "#{bundle_cleanup}; bundle install --path=#{release_bundle_path} --without=test cucumber --local"
-        end
+        run_now! "cd #{latest_deploy}; #{bundle_cleanup}; bundle install --path=#{release_bundle_path} --without=test cucumber --local"
       end
 
       def npm_install
@@ -177,15 +175,11 @@ module Deploy
 
         FileUtils.mkdir_p shared_dir
         FileUtils.ln_s shared_dir, release_dir
-        FileUtils.cd latest_deploy do
-          run_now! "export NODE_ENV='production'; npm install"
-        end
+        run_now! "export NODE_ENV='production'; cd #{latest_deploy}; npm install"
       end
 
       def migrate
-        FileUtils.cd latest_deploy do
-          run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rake db:migrate"
-        end
+        run_now! "#{latest_deploy}; #{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rake db:migrate"
       end
 
       def link_current
@@ -210,7 +204,7 @@ module Deploy
       
       def start_first_run_services
         exit_status = false
-        FileUtils.cd latest_deploy do
+        FileUtils.cd  do
           exit_status = run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
         end
         exit_status
