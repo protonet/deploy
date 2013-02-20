@@ -204,7 +204,7 @@ module Deploy
       
       def start_first_run_services
         exit_status = false
-        FileUtils.cd  do
+        FileUtils.cd latest_deploy do
           exit_status = run_now! "#{bundle_cleanup}; export RAILS_ENV=#{config.get(:env)}; bundle exec rails runner \"SystemWifi.reconfigure! if SystemWifi.supported?\""
         end
         exit_status
