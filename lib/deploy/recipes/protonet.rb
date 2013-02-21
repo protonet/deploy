@@ -200,7 +200,7 @@ module Deploy
       end
 
       def npm_install_app_manager
-        shared_dir  = File.expand_path('node_modules_app_manager', config.get(:shared_path))
+        shared_dir  = File.expand_path('app-manager/node_modules', config.get(:shared_path))
         release_dir = File.expand_path('app-manager/node_modules', latest_deploy)
 
         FileUtils.mkdir_p shared_dir
