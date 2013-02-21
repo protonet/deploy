@@ -29,6 +29,7 @@ module Deploy
           :prepare_code,
           :bundle,
           :npm_install,
+          :npm_install_app_manager,
           :setup_db,
           :link_current,
           :bundle_mobile,
@@ -45,6 +46,7 @@ module Deploy
           :prepare_code,
           :bundle,
           :npm_install,
+          :npm_install_app_manager,
           :migrate,
           # :copy_stage_config,
           :clean_up,
@@ -98,6 +100,8 @@ module Deploy
         create_directory "#{config.get(:shared_path)}/externals/snapshots"
         create_directory "#{config.get(:shared_path)}/externals/image_proxy"
         create_directory "#{config.get(:shared_path)}/solr/data"
+        create_directory "#{config.get(:shared_path)}/app-manager/store/apps"
+        create_directory "#{config.get(:shared_path)}/app-manager/store/buildpacks"
         create_directory "#{config.get(:shared_path)}/files", 0770
         create_directory "#{config.get(:shared_path)}/pids", 0770
         create_directory "#{config.get(:shared_path)}/avatars", 0770
@@ -109,12 +113,15 @@ module Deploy
         FileUtils.rm_rf   "#{latest_deploy}/tmp/pids"
         FileUtils.mkdir_p "#{latest_deploy}/public"
         FileUtils.mkdir_p "#{latest_deploy}/tmp"
-        FileUtils.ln_s    "#{config.get(:shared_path)}/log",        "#{latest_deploy}/log"
-        FileUtils.ln_s    "#{config.get(:shared_path)}/system",     "#{latest_deploy}/public/system"
-        FileUtils.ln_s    "#{config.get(:shared_path)}/pids",       "#{latest_deploy}/tmp/pids"
-        FileUtils.ln_s    "#{config.get(:shared_path)}/externals",  "#{latest_deploy}/public/externals"
+        FileUtils.ln_s    "#{config.get(:shared_path)}/log",                "#{latest_deploy}/log"
+        FileUtils.ln_s    "#{config.get(:shared_path)}/system",             "#{latest_deploy}/public/system"
+        FileUtils.ln_s    "#{config.get(:shared_path)}/pids",               "#{latest_deploy}/tmp/pids"
+        FileUtils.ln_s    "#{config.get(:shared_path)}/externals",          "#{latest_deploy}/public/externals"
+        FileUtils.rm_rf   "#{config.get(:shared_path)}/app-manager/store/apps"
+        FileUtils.ln_s    "#{config.get(:shared_path)}/app-manager/store/apps", "#{latest_deploy}/app-manager/store/apps"
+        FileUtils.rm_rf   "#{config.get(:shared_path)}/app-manager/store/buildpacks"
+        FileUtils.ln_s    "#{config.get(:shared_path)}/app-manager/store/buildpacks", "#{latest_deploy}/app-manager/store/buildpacks"
       end
-
 
       def setup_db
         success = false
@@ -190,6 +197,16 @@ module Deploy
         FileUtils.ln_s shared_dir, release_dir
         
         run_now! "cd #{latest_deploy}/node; export NODE_ENV='production'; npm install"
+      end
+
+      def npm_install_app_manager
+        shared_dir  = File.expand_path('node_modules_app_manager', config.get(:shared_path))
+        release_dir = File.expand_path('app-manager/node_modules', latest_deploy)
+
+        FileUtils.mkdir_p shared_dir
+        FileUtils.ln_s shared_dir, release_dir
+
+        run_now! "cd #{latest_deploy}/app-manager; export NODE_ENV='production'; npm install"
       end
 
       def migrate
