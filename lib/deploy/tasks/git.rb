@@ -81,6 +81,19 @@ module Deploy
             remote 'git fetch -f -t'
             remote "git checkout -f #{ENV['GIT_TAG']}"
           end
+
+          task :checkout_branch, 'Deploys to the environment using a tag' do
+            unless ENV['GIT_BRANCH']
+              message = "No branch specified [GIT_BRANCH]"
+              puts message
+              raise message
+            end
+
+            remote "cd #{dep_config.app_root}"
+            remote 'git fetch -f'
+            remote "git checkout -f ."
+            remote "git checkout -f #{ENV['GIT_BRANCH']}"
+          end
         end
       end
 
