@@ -50,5 +50,5 @@ def require_params(*params)
     end
   end
 
-  found_params
+  found_params.size == 1 ? found_params.first : found_params
 end

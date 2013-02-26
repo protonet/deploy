@@ -17,6 +17,8 @@ module Deploy
       end
 
       tasks = options[:tasks].split(',')
+      tasks = with_tasks(tasks, options[:with])
+      tasks = without_tasks(tasks, options[:without])
 
       # Execute the task
       tasks.each do |task|
@@ -88,6 +90,17 @@ module Deploy
       #   :authentication       => :plain, # :plain, :login, :cram_md5, no auth by default
       #   :domain               => "localhost.localdomain" # the HELO domain provided by the client to the server
       # }
+    end
+
+    def self.with_tasks(tasks, withs)
+      withs ||= ""
+      withs = withs.to_s.split(',')
+      tasks + withs
+    end
+
+    def self.without_tasks(tasks, withouts)
+
+      tasks
     end
 
   end

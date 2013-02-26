@@ -49,19 +49,14 @@ module Deploy
           end
 
           task :tag_and_release, 'Makes a tag from the current staging branch' do
-            from_branch = require_params(:git_from_branch).first
+            from_branch = require_params(:git_from_branch)
+            tag_message = require_params(:tag_message)
 
             starting_branch = `git rev-parse --abbrev-ref HEAD`.strip
 
-            unless ENV['TAG_MESSAGE']
-              message = "No message specified [TAG_MESSAGE]"
-              puts message
-              raise message
-            end
-
             cmd = []
             cmd << "git checkout #{from_branch}" if starting_branch != from_branch
-            cmd << "git tag -a release-#{Time.now.utc.strftime('%Y-%m-%d_%H-%M-%S')} -m \"#{ENV['TAG_MESSAGE']}\""
+            cmd << "git tag -a release-#{Time.now.utc.strftime('%Y-%m-%d_%H-%M-%S')} -m \"#{tag_message}\""
             cmd << "git push"
             cmd << "git push --tags"
 
@@ -71,28 +66,20 @@ module Deploy
           end
 
           task :checkout_tag, 'Deploys to the environment using a tag' do
-            unless ENV['GIT_TAG']
-              message = "No tag specified [GIT_TAG]"
-              puts message
-              raise message
-            end
+            git_tag = require_params(:git_tag)
 
             remote "cd #{dep_config.app_root}"
             remote 'git fetch -f -t'
-            remote "git checkout -f #{ENV['GIT_TAG']}"
+            remote "git checkout -f #{git_tag}"
           end
 
           task :checkout_branch, 'Deploys to the environment using a tag' do
-            unless ENV['GIT_BRANCH']
-              message = "No branch specified [GIT_BRANCH]"
-              puts message
-              raise message
-            end
+            git_branch = require_params(:git_branch)
 
             remote "cd #{dep_config.app_root}"
             remote 'git fetch -f'
             remote "git checkout -f ."
-            remote "git checkout -f #{ENV['GIT_BRANCH']}"
+            remote "git checkout -f #{git_branch}"
           end
         end
       end
