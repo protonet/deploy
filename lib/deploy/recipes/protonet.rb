@@ -117,10 +117,13 @@ module Deploy
         FileUtils.ln_s    "#{config.get(:shared_path)}/system",             "#{latest_deploy}/public/system"
         FileUtils.ln_s    "#{config.get(:shared_path)}/pids",               "#{latest_deploy}/tmp/pids"
         FileUtils.ln_s    "#{config.get(:shared_path)}/externals",          "#{latest_deploy}/public/externals"
-        FileUtils.rm_rf   "#{latest_deploy}/app-manager/store/apps"
-        FileUtils.ln_s    "#{config.get(:shared_path)}/app-manager/store/apps", "#{latest_deploy}/app-manager/store/apps"
-        FileUtils.rm_rf   "#{latest_deploy}/app-manager/store/buildpacks"
-        FileUtils.ln_s    "#{config.get(:shared_path)}/app-manager/store/buildpacks", "#{latest_deploy}/app-manager/store/buildpacks"
+        
+        if File.exists?("#{latest_deploy}/app-manager/store/apps")
+          FileUtils.rm_rf   "#{latest_deploy}/app-manager/store/apps"
+          FileUtils.ln_s    "#{config.get(:shared_path)}/app-manager/store/apps", "#{latest_deploy}/app-manager/store/apps"
+          FileUtils.rm_rf   "#{latest_deploy}/app-manager/store/buildpacks"
+          FileUtils.ln_s    "#{config.get(:shared_path)}/app-manager/store/buildpacks", "#{latest_deploy}/app-manager/store/buildpacks"
+        end
       end
 
       def setup_db
@@ -200,6 +203,7 @@ module Deploy
       end
 
       def npm_install_app_manager
+        return true unless File.exists?("#{latest_deploy}/app-manager/store/apps")
         shared_dir  = File.expand_path('app-manager/node_modules', config.get(:shared_path))
         release_dir = File.expand_path('app-manager/node_modules', latest_deploy)
 
