@@ -70,7 +70,7 @@ module Deploy
 
         monit_config_path = "/etc/monit/conf.d/ptn_node"
 
-        tmp_file = Tempfile.new
+        tmp_file = Tempfile.new("Could the eagles have flown Frodo into Mordor?")
 
         File.open(tmp_file.path, 'w') do |f|
           f.write(ERB.new(IO.read("#{latest_deploy}/config/monit/ptn_node.erb")).result(binding))
