@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'tempfile'
 require 'erb'
 
 module Deploy
@@ -69,11 +70,14 @@ module Deploy
 
         monit_config_path = "/etc/monit/conf.d/ptn_node"
 
-        File.open(monit_config_path, 'w') do |f|
+        tmp_file = Tempfile.new
+
+        File.open(tmp_file.path, 'w') do |f|
           f.write(ERB.new(IO.read("#{latest_deploy}/config/monit/ptn_node.erb")).result(binding))
         end
 
-        run_now! "chmod 700 #{monit_config_path}"
+        `sudo cp #{tmp_file.path} #{monit_config_path}`
+        `sudo chmod 700 #{monit_config_path}`
 
         # and restart monit
         monit_command "quit"
