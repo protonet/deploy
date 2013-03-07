@@ -16,7 +16,7 @@ module Deploy
 
       def monit_command(command = "")
         puts "\nrunning monit command #{command}"
-        run_now! "/usr/sbin/monit -c #{config.get(:shared_path)}/config/monit_ptn_node -l #{config.get(:shared_path)}/log/monit.log -p #{config.get(:shared_path)}/pids/monit.pid #{command}"
+        run_now! "/usr/sbin/monit #{command}"
         sleep 2
       end
 
@@ -67,11 +67,13 @@ module Deploy
         current_path    = config.get(:current_path)
         monit_password  = (1..16).collect { (i = Kernel.rand(62); i += ((i < 10) ? 48 : ((i < 36) ? 55 : 61 ))).chr }.join
 
-        File.open("/etc/monit/conf.d/ptn_node", 'w') do |f|
+        monit_config_path = "/etc/monit/conf.d/ptn_node"
+
+        File.open(monit_config_path, 'w') do |f|
           f.write(ERB.new(IO.read("#{latest_deploy}/config/monit/ptn_node.erb")).result(binding))
         end
 
-        run_now! "chmod 700 #{config.get(:shared_path)}/config/monit_ptn_node"
+        run_now! "chmod 700 #{monit_config_path}"
 
         # and restart monit
         monit_command "quit"
