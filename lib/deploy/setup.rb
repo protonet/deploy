@@ -16,6 +16,8 @@ module Deploy
         raise summary
       end
 
+      puts "PARAMS #{options[:params]}"
+
       tasks = options[:tasks].split(',')
       tasks = with_tasks(tasks, options[:with])
       tasks = without_tasks(tasks, options[:without])
