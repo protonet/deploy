@@ -43,7 +43,7 @@ end
 def require_params(*params)
   found_params = []
   params.each do |param|
-    if dep_config.exists?(param)
+    if dep_config.exists?(param.to_sym)
       found_params << dep_config.get(param)
     else
       raise "No required param found: #{param}"

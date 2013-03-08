@@ -35,9 +35,7 @@ module Deploy
       params = parameters.split(',')
       params.each do |p|
         key, value = p.split('=')
-        puts "Setting #{key} = #{value}"
-        dep_config.set(key,value)
-        puts "GETTING #{key} = #{dep_config.get(key)}"
+        dep_config.set(key.to_sym,value)
       end
     end
 

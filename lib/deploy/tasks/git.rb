@@ -66,8 +66,7 @@ module Deploy
           end
 
           task :checkout_tag, 'Deploys to the environment using a tag' do
-            # git_tag = require_params(:git_tag)
-            git_tag = ENV['GIT_TAG']
+            git_tag = require_params(:git_tag)
 
             remote "cd #{dep_config.app_root}"
             remote 'git fetch -f -t'
