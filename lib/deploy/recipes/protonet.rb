@@ -70,14 +70,14 @@ module Deploy
 
         monit_config_path = "/etc/monit/conf.d/ptn_node"
 
-        tmp_file = Tempfile.new("Could the eagles have flown Frodo into Mordor?")
+        tmp_file = Tempfile.new("ptn_node")
 
         File.open(tmp_file.path, 'w') do |f|
           f.write(ERB.new(IO.read("#{latest_deploy}/config/monit/ptn_node.erb")).result(binding))
         end
 
-        `sudo cp #{tmp_file.path} #{monit_config_path}`
-        `sudo chmod 700 #{monit_config_path}`
+        puts "copying the tempfile to #{monit_config_path}: " + `sudo cp #{tmp_file.path} #{monit_config_path}`
+        puts "setting the permission for #{monit_config_path}: " + `sudo chmod 700 #{monit_config_path}`
 
         # and restart monit
         monit_command "quit"
