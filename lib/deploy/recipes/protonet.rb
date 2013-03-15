@@ -68,16 +68,11 @@ module Deploy
         current_path    = config.get(:current_path)
         monit_password  = (1..16).collect { (i = Kernel.rand(62); i += ((i < 10) ? 48 : ((i < 36) ? 55 : 61 ))).chr }.join
 
-        monit_config_path = "/etc/monit/conf.d/ptn_node"
+        monit_config_path = "/home/protonet/shared/config/monit.d/ptn_node"
 
-        tmp_file = Tempfile.new("ptn_node")
-
-        File.open(tmp_file.path, 'w') do |f|
+        File.open(monit_config_path, 'w') do |f|
           f.write(ERB.new(IO.read("#{latest_deploy}/config/monit/ptn_node.erb")).result(binding))
         end
-
-        puts "copying the tempfile to #{monit_config_path}: " + `sudo cp #{tmp_file.path} #{monit_config_path}`
-        puts "setting the permission for #{monit_config_path}: " + `sudo chmod 700 #{monit_config_path}`
 
         # and restart monit
         monit_command "quit"
