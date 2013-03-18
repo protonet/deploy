@@ -15,12 +15,6 @@ module Deploy
         Dir["#{config.get(:releases_path)}/*"].sort.last
       end
 
-      def app_monit_command(command = "")
-        puts "\nRunning monit command #{command}"
-        system("bash -l -c '/home/protonet/dashboard/current/script/init/app_monit #{command}'")
-        sleep 2
-      end
-
       def monit_command(command = "")
         puts "\nRunning monit command #{command}"
         system("bash -l -c 'sudo /usr/sbin/monit #{command}'")
@@ -81,7 +75,7 @@ module Deploy
         end
 
         # and restart monit
-        app_monit_command "stop"
+        system("/usr/sbin/monit -c /home/protonet/dashboard/shared/config/monit_ptn_node -l /home/protonet/dashboard/shared/log/monit.log -p /home/protonet/dashboard/shared/pids/monit.pid")
         monit_command "quit"
         # restarts it
         monit_command
