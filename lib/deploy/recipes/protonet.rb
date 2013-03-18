@@ -16,8 +16,8 @@ module Deploy
       end
 
       def monit_command(command = "")
-        puts "\nrunning monit command #{command}"
-        run_now! "/usr/sbin/monit #{command}"
+        puts "\nRunning monit command #{command}"
+        system("bash -l -c 'sudo /usr/sbin/monit #{command}'")
         sleep 2
       end
 
