@@ -68,7 +68,7 @@ module Deploy
         current_path    = config.get(:current_path)
         monit_password  = (1..16).collect { (i = Kernel.rand(62); i += ((i < 10) ? 48 : ((i < 36) ? 55 : 61 ))).chr }.join
 
-        monit_config_path = "/home/protonet/shared/config/monit.d/ptn_node"
+        monit_config_path = "/home/protonet/dashboard/shared/config/monit.d/ptn_node"
 
         File.open(monit_config_path, 'w') do |f|
           f.write(ERB.new(IO.read("#{latest_deploy}/config/monit/ptn_node.erb")).result(binding))
@@ -118,7 +118,7 @@ module Deploy
         FileUtils.ln_s    "#{config.get(:shared_path)}/system",             "#{latest_deploy}/public/system"
         FileUtils.ln_s    "#{config.get(:shared_path)}/pids",               "#{latest_deploy}/tmp/pids"
         FileUtils.ln_s    "#{config.get(:shared_path)}/externals",          "#{latest_deploy}/public/externals"
-        
+
         if File.exists?("#{latest_deploy}/app-manager/store/apps")
           FileUtils.rm_rf   "#{latest_deploy}/app-manager/store/apps"
           FileUtils.ln_s    "#{config.get(:shared_path)}/app-manager/store/apps", "#{latest_deploy}/app-manager/store/apps"
@@ -192,14 +192,14 @@ module Deploy
         FileUtils.cd latest_deploy + "/mobile"
         run_now! "#{bundle_cleanup}; export RACK_ENV='production'; bundle exec rake assets:precompile"
       end
-      
+
       def npm_install
         shared_dir  = File.expand_path('node_modules', config.get(:shared_path))
         release_dir = File.expand_path('node/node_modules', latest_deploy)
 
         FileUtils.mkdir_p shared_dir
         FileUtils.ln_s shared_dir, release_dir
-        
+
         run_now! "cd #{latest_deploy}/node; export NODE_ENV='production'; npm install"
       end
 
@@ -238,7 +238,7 @@ module Deploy
       def restart_services
         monit_command "-g daemons restart all"
       end
-      
+
       def start_first_run_services
         exit_status = false
         FileUtils.cd latest_deploy do
@@ -246,7 +246,7 @@ module Deploy
         end
         exit_status
       end
-      
+
       def load_crontab
         exit_status = false
         FileUtils.cd latest_deploy do
