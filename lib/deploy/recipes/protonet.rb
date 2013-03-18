@@ -92,6 +92,11 @@ module Deploy
           puts "Success"
         end
         sleep 10
+        puts "Killing js_dispatcher"
+        if system("kill $(ps aux | grep ruby | grep js_dispatch | awk '{print $2}')")
+          puts "Success"
+        end
+        sleep 10
         # restarts it
         monit_command
         monit_command "monitor all"
