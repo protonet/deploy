@@ -77,7 +77,20 @@ module Deploy
         # and restart monit
         monit_command "quit"
         sleep 10
-        system("killall monit")
+        puts "Killing all node"
+        if system("killall node")
+          puts "Success"
+        end
+        sleep 10
+        puts "Killing all monit"
+        if system("killall monit")
+          puts "Success"
+        end
+        sleep 10
+        puts "Killing rabbitmq-server with /etc/init.d"
+        if system("sudo /etc/init.d/rabbitmq-server stop")
+          puts "Success"
+        end
         sleep 10
         # restarts it
         monit_command
