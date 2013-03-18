@@ -77,7 +77,7 @@ module Deploy
         # and restart monit
         monit_command "quit"
         sleep 10
-        system("/usr/sbin/monit -c /home/protonet/dashboard/shared/config/monit_ptn_node -l /home/protonet/dashboard/shared/log/monit.log -p /home/protonet/dashboard/shared/pids/monit.pid quit")
+        system("killall monit")
         sleep 10
         # restarts it
         monit_command
