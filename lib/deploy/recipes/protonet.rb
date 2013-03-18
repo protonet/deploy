@@ -93,7 +93,7 @@ module Deploy
         end
         sleep 10
         puts "Killing js_dispatcher"
-        if system("kill $(ps aux | grep ruby | grep js_dispatch | awk '{print $2}')")
+        if system("kill $(ps aux | grep js_dispatcher_production | grep -v grep | awk '{print $2}')")
           puts "Success"
         end
         sleep 10
